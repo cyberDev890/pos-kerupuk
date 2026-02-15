@@ -69,6 +69,10 @@ Route::middleware('auth')->group(function () {
              Route::post('/sales/{id}/print-raw', [TransactionController::class, 'printRaw'])->name('sales.print-raw');
              Route::get('/sales/{id}/invoice', [TransactionController::class, 'invoice'])->name('sales.invoice');
              Route::delete('/sales/{id}', [TransactionController::class, 'destroy'])->name('sales.destroy');
+             
+             // QZ Tray Security Routes
+             Route::get('/qz/certificate', [TransactionController::class, 'qzCertificate'])->name('qz.certificate');
+             Route::post('/qz/sign', [TransactionController::class, 'qzSign'])->name('qz.sign');
         });
 
         Route::get('return/search', [ReturnController::class, 'searchTransaction'])->name('return.search');

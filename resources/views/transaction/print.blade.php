@@ -8,37 +8,45 @@
         @media print {
             @page {
                 margin: 0;
-                /* size: 58mm;  <-- Removing this to let printer driver handle "cut" if possible */
+                size: 58mm auto; /* Experimental: Try to force auto height */
             }
             body {
                 margin: 0;
+                padding-bottom: 20px; /* Give space for cutter */
             }
+            /* Hide Browser Header/Footer */
+            header, footer { display: none !important; }
         }
         html, body {
             width: 58mm;
-            height: max-content; /* Try to minimize height */
+            /* height: max-content; Removed to prevent conflict with @page */
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10px;
+            font-family: 'Consolas', 'Lucida Console', 'Courier New', monospace; /* Lebih tebal */
+            font-size: 12px; /* Diperbesar dari 10px */
+            color: #000;
+            font-weight: 600; /* Agak bold biar jelas */
         }
         .container {
             width: 100%;
-            padding: 2px 2px 20px 2px; /* Add bottom padding for content safety */
+            padding: 0 2px;
         }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .text-left { text-align: left; }
-        .bold { font-weight: bold; }
-        .dashed { border-top: 1px dashed #000; margin: 5px 0; }
+        .bold { font-weight: 800; font-size: 13px; }
+        .dashed { border-top: 2px dashed #000; margin: 8px 0; } /* Garis lebih tebal */
         table { width: 100%; border-collapse: collapse; }
-        td, th { vertical-align: top; font-size: 10px; }
+        td, th { vertical-align: top; font-size: 12px; padding-bottom: 2px; }
+        
+        /* Judul Toko Besar */
+        h4 { font-size: 16px; font-weight: 900; margin-bottom: 5px; }
         
         .limit-text {
             white-space: nowrap; 
             overflow: hidden; 
             text-overflow: ellipsis; 
-            max-width: 30mm;
+            max-width: 35mm;
         }
     </style>
 </head>

@@ -210,15 +210,12 @@
 
     function printRaw(id) {
         Swal.fire({
-            title: 'Mencetak Struk...',
+            title: 'Mencetak via QZ Tray...',
             text: 'Menghubungi printer...',
-            timer: 3000,
-            didOpen: () => {
-                Swal.showLoading()
-            }
+            didOpen: () => { Swal.showLoading() }
         });
 
-        // Use proper route generation
+        // 1. Ambil Data RAW dari Server
         let url = "{{ route('transaction.sales.print-raw', ':id') }}";
         url = url.replace(':id', id);
 
@@ -226,40 +223,43 @@
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Server returned ' + response.status + ': ' + response.statusText);
-            }
-            return response.json();
+        .then(res => res.json())
+        .then(res => {
+            if(!res.success) throw new Error(res.message);
+            return res.data; // Base64 Data
         })
-        .then(data => {
-            if(data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Struk dikirim ke printer.',
-                    timer: 1500,
-                    showConfirmButton: false
+        .then(base64Data => {
+            // 2. Kirim ke QZ Tray via Helper Global
+            return window.connectToQZ()
+                .then(() => qz.printers.find("pos_printer")) // Cari printer bernama "pos_printer"
+                .then(printer => {
+                    let config = qz.configs.create(printer);
+                    let data = [{ 
+                        type: 'raw', 
+                        format: 'command', 
+                        flavor: 'base64', // Fix: Tell QZ this is Base64 data
+                        data: base64Data
+                    }];
+                    return qz.print(config, data);
                 });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal Print',
-                    text: data.message || 'Unknown error'
-                });
-            }
         })
-        .catch(error => {
-            console.error('Print Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Koneksi Gagal',
-                text: 'Detail: ' + error.message
-            });
+        .then(() => {
+            Swal.fire('Berhasil', 'Struk tercetak!', 'success');
+            // Biarkan koneksi tetap hidup untuk print berikutnya lebih cepat
+        })
+        .catch(err => {
+            console.error(err);
+            let msg = err.message ? err.message : err;
+            if(msg.includes('Unable to establish connection')) {
+                msg = "Aplikasi QZ Tray belum jalan di Laptop! Silakan buka dulu aplikasinya (Icon Hijau).";
+            }
+            if(msg.includes('printer')) {
+                msg = "Printer 'pos_printer' tidak ditemukan. Cek ejaan nama printer di Windows.";
+            }
+            Swal.fire('Gagal', msg, 'error');
         });
     }
     

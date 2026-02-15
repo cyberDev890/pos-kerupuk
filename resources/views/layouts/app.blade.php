@@ -117,6 +117,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- jQuery -->
     <script src="{{ asset('adminlte') }}/plugins/jquery/jquery.min.js"></script>
+    <!-- QZ Tray -->
+    <script src="https://cdn.jsdelivr.net/npm/qz-tray@2.2.4/qz-tray.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('adminlte') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
@@ -134,6 +137,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('adminlte') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="{{ asset('adminlte') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script>
+        // QZ Tray Security Configuration
+        qz.security.setCertificatePromise(function(resolve, reject) {
+            fetch("{{ route('transaction.qz.certificate') }}")
+                .then(data => data.text())
+                .then(resolve)
+                .catch(reject);
+        });
+
+        qz.security.setSignaturePromise(function(toSign) {
+            return function(resolve, reject) {
+                fetch("{{ route('transaction.qz.sign') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ request: toSign })
+                })
+                .then(data => data.text())
+                .then(resolve)
+                .catch(reject);
+            };
+        });
+
+        // Global QZ Tray Helper
+        window.connectToQZ = function() {
+            if (qz.websocket.isActive()) {
+                return Promise.resolve();
+            }
+            return qz.websocket.connect({ 
+                retries: 5, 
+                delay: 1 
+            }).catch(function(e) {
+                console.error("QZ Tray Connection Error:", e);
+                throw e;
+            });
+        };
+
         $(function() {
             $("#table1").DataTable({
                 "responsive": true,

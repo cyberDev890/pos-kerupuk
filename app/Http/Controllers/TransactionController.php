@@ -253,65 +253,46 @@ class TransactionController extends Controller
 
     public function printRaw($id)
     {
+        // QZ Tray Mode: Server generates commands, Client prints them.
         $transaction = \App\Models\Transaction::with(['details.product', 'customer', 'user'])->findOrFail($id);
 
         try {
-            // Connector for Windows Shared Printer
-            // Share name must be exactly: pos_printer
-            $connector = new \Mike42\Escpos\PrintConnectors\WindowsPrintConnector("pos_printer");
+            // Use DummyConnector to generate RAW commands in memory
+            $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
             $printer = new \Mike42\Escpos\Printer($connector);
 
             // Initialize
             $printer->initialize();
             
-            // Layout
+            // Layout (Sama persis dengan sebelumnya)
             $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
             $printer->text("JAYA ABADI\n");
             $printer->text("Jl. Ijen Dukusia Rambipuji\n");
             $printer->text("082330634269\n");
-            $printer->text("--------------------------------\n");
+            $printer->text("-----------------------------\n"); // 29 Chars
 
             $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
             $printer->text("No  : " . $transaction->no_transaksi . "\n");
-            // Use created_at for time, fallback to tanggal (midnight) if needed
             $printer->text("Tgl : " . date('d/m/Y H:i', strtotime($transaction->created_at)) . "\n");
             $printer->text("Csr : " . ($transaction->user->name ?? '-') . "\n");
             $printer->text("Plg : " . ($transaction->customer->nama ?? 'Umum') . "\n");
-            $printer->text("--------------------------------\n");
+            $printer->text("-----------------------------\n");
 
             foreach ($transaction->details as $detail) {
                 $printer->text($detail->product->nama_produk . "\n");
-                
-                // Format: Qty x Price = Subtotal
-                // 10x 5.000 = 50.000
-                // Remove .00 from qty if whole number
                 $qtyDisplay = (float)$detail->jumlah; 
                 $line = $qtyDisplay . "x " . number_format($detail->harga_satuan, 0, ',', '.') . " = " . number_format($detail->subtotal, 0, ',', '.');
                 $printer->text($line . "\n");
             }
 
-            $printer->text("--------------------------------\n");
-            
-            // Item Count & Total
-            // We construct a line with Item count on left and Total on right
-            // 58mm -> Approx 32 chars usually.
-            $itemCountText = $transaction->details->count() . " Item";
-            $totalText = "Total: " . number_format($transaction->total_harga, 0, ',', '.');
-            
-            // Simple space padding
-            $maxChars = 32; 
-            $spaces = $maxChars - strlen($itemCountText) - strlen($totalText);
-            if($spaces < 1) $spaces = 1;
-            
-            $lineTotal = $itemCountText . str_repeat(" ", $spaces) . $totalText;
-            $printer->text($lineTotal . "\n");
+            $printer->text("-----------------------------\n");
             
             $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_RIGHT);
+            $printer->text("Total: " . number_format($transaction->total_harga, 0, ',', '.') . "\n");
             
             if($transaction->biaya_kirim > 0) {
                 $printer->text("Ongkir: " . number_format($transaction->biaya_kirim, 0, ',', '.') . "\n");
             }
-            
             if($transaction->biaya_tambahan > 0) {
                 $printer->text("Lainnya: " . number_format($transaction->biaya_tambahan, 0, ',', '.') . "\n");
             }
@@ -323,20 +304,25 @@ class TransactionController extends Controller
             $printer->text("Bayar: " . number_format($transaction->bayar, 0, ',', '.') . "\n");
             $printer->text("Kembali: " . number_format($transaction->kembalian, 0, ',', '.') . "\n");
 
-            $printer->text("--------------------------------\n");
+            $printer->text("-----------------------------\n");
             $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
             $printer->text("Terima Kasih\n");
-            // $printer->text("Barang yg dibeli tdk dpt ditukar\n"); // Removed
             
-            $printer->feed(3); // Feed some lines
-            $printer->cut();   // Cut paper
+            $printer->feed(3); 
+            $printer->cut();   
             
+            // Get the binary data
+            $data = $connector->getData();
             $printer->close();
             
-            return response()->json(['success' => true]);
+            // Return base64 encoded data
+            return response()->json([
+                'success' => true, 
+                'data' => base64_encode($data)
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => "Gagal Print: " . $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => "Gagal Generate Struk: " . $e->getMessage()], 500);
         }
     }
 
@@ -344,5 +330,41 @@ class TransactionController extends Controller
     {
         $transaction = \App\Models\Transaction::with(['details.product.unit', 'details.unit', 'customer', 'user'])->findOrFail($id);
         return view('transaction.invoice', compact('transaction'));
+    }
+
+    // QZ Tray Security
+    public function qzCertificate()
+    {
+        $path = storage_path('app/qz/digital-certificate.txt');
+        if(!file_exists($path)) return response("Certificate not found", 404);
+        return response()->file($path, ['Content-Type' => 'text/plain']);
+    }
+
+    public function qzSign(Request $request) 
+    {
+        $requestData = $request->input('request'); // The data to sign
+        $privateKeyPath = storage_path('app/qz/private-key.pem');
+        
+        if(!file_exists($privateKeyPath)) {
+            \Log::error("QZ Sign: Private Key not found at " . $privateKeyPath);
+            return response("Private Key not found", 404);
+        }
+
+        // Use openssl_pkey_get_private to handle formatting (CRLF etc) safely
+        $privateKeyContent = file_get_contents($privateKeyPath);
+        $privateKey = openssl_pkey_get_private($privateKeyContent);
+
+        if (!$privateKey) {
+            \Log::error("QZ Sign: Invalid Private Key Format");
+            return response("Invalid Private Key", 500);
+        }
+        
+        $signature = null;
+        if (openssl_sign($requestData, $signature, $privateKey, "sha512")) { 
+            return base64_encode($signature);
+        }
+        
+        \Log::error("QZ Sign Failed: " . openssl_error_string());
+        return response("Failed to sign: " . openssl_error_string(), 500);
     }
 }
