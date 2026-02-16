@@ -31,7 +31,7 @@ class FormProduct extends Component
 
             $isi = $product->unit ? $product->unit->isi : 1;
             $this->stok = $product->stok;
-            $this->stok_gudang = $product->stok_gudang;
+            $this->stok_gudang = $product->stok_gudang / $isi;
             $this->stok_min = $product->stok_min;
 
             $this->is_active = $product->is_active;

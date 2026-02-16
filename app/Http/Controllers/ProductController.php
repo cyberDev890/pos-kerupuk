@@ -87,7 +87,7 @@ class ProductController extends Controller
                 'harga_beli' => $request->harga_beli,
                 'kategori_id' => $request->kategori_id,
                 'stok' => $request->stok ?? 0, // Allow updating stock directly
-                'stok_gudang' => $request->stok_gudang ?? 0,
+                'stok_gudang' => ($request->stok_gudang ?? 0) * $isi,
                 'stok_min' => $request->stok_min,
                 'is_active' => $request->is_active ? true : false,
             ];

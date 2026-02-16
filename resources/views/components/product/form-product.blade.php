@@ -30,12 +30,13 @@
                         </div>
                         <div class="form-group my-1">
                             <label for="unit_id_{{ $id ?? 'new' }}"> Satuan</label>
-                            <select name="unit_id" id="unit_id_{{ $id ?? 'new' }}" class="form-control" onchange="updateUnitLabels(this, '{{ $id ?? 'new' }}')">
+                            <select name="unit_id" id="unit_id_{{ $id ?? 'new' }}" class="form-control" onchange="updateUnitLabels(this, '{{ $id ?? 'new' }}'); updateStokHelper('{{ $id ?? 'new' }}')">
                                 <option value="">Pilih Satuan</option>
                                 @foreach ($units ?? [] as $unit)
                                     <option value="{{ $unit->id }}"
                                         data-kecil="{{ $unit->satuan_kecil }}"
                                         data-besar="{{ $unit->satuan_besar }}"
+                                        data-isi="{{ $unit->isi }}"
                                         {{ old('unit_id', $unit_id ?? '') == $unit->id ? 'selected' : '' }}>
                                         {{ $unit->nama_satuan }} (1 {{ $unit->satuan_besar }} = {{ $unit->isi }} {{ $unit->satuan_kecil }})
                                     </option>
@@ -73,13 +74,14 @@
                             <div class="invalid-feedback" id="error-harga-jual-besar-{{ $id ?? 'new' }}"></div>
                         </div>
                         <div class="form-group my-1">
-                            <label for="stok_{{ $id ?? 'new' }}">Stok Saat Ini (Satuan Kecil)</label>
+                            <label for="stok_{{ $id ?? 'new' }}">Stok Toko</label>
                             <input type="number" step="any" class="form-control" name="stok" id="stok_{{ $id ?? 'new' }}"
-                                value="{{ old('stok', $stok ?? 0) }}" placeholder="Masukkan Stok Real">
-                            <small class="text-muted">Mengubah nilai ini akan menimpa stok yang ada.</small>
+                                value="{{ old('stok', $stok ?? 0) }}" placeholder="Masukkan Stok Real" oninput="updateStokHelper('{{ $id ?? 'new' }}')">
+                            <small class="text-muted mb-1 d-block">Mengubah nilai ini akan menimpa stok yang ada.</small>
+                            <small class="text-info font-weight-bold" id="stok-helper-{{ $id ?? 'new' }}"></small>
                         </div>
                         <div class="form-group my-1">
-                            <label for="stok_gudang_{{ $id ?? 'new' }}">Stok Gudang (Satuan Kecil)</label>
+                            <label for="stok_gudang_{{ $id ?? 'new' }}">Stok Gudang (Satuan Besar / Ball)</label>
                             <input type="number" step="any" class="form-control" name="stok_gudang" id="stok_gudang_{{ $id ?? 'new' }}"
                                 value="{{ old('stok_gudang', $stok_gudang ?? 0) }}" placeholder="Masukkan Stok Gudang">
                         </div>
@@ -155,5 +157,31 @@
         }
 
         return isValid;
+    }
+
+    function updateStokHelper(id) {
+        let stockInput = document.getElementById('stok_' + id);
+        let unitSelect = document.getElementById('unit_id_' + id);
+        let helper = document.getElementById('stok-helper-' + id);
+        
+        if (!stockInput || !unitSelect || !helper) return;
+
+        let stock = parseFloat(stockInput.value) || 0;
+        let selectedOption = unitSelect.options[unitSelect.selectedIndex];
+        let isi = 1;
+        let besarUnit = 'Ball';
+
+        if (selectedOption && selectedOption.value) {
+            isi = parseFloat(selectedOption.getAttribute('data-isi')) || 1;
+            besarUnit = selectedOption.getAttribute('data-besar') || 'Ball';
+        }
+
+        if (stock > 0 && isi > 1) {
+            let balls = stock / isi;
+            let ballsFormatted = Number.isInteger(balls) ? balls : balls.toFixed(2).replace(/\.?0+$/, '');
+            helper.textContent = `Setara dengan ${ballsFormatted} ${besarUnit}`;
+        } else {
+            helper.textContent = '';
+        }
     }
 </script>
