@@ -30,7 +30,10 @@ class ProductController extends Controller
         ]);
 
         $rules = [
-            'nama_produk' => 'required|unique:products,nama_produk,' . $id,
+            'nama_produk' => [
+                'required',
+                \Illuminate\Validation\Rule::unique('products')->ignore($id)->whereNull('deleted_at')
+            ],
             'harga_jual' => 'required|numeric|min:0',
             'harga_jual_besar' => 'nullable|numeric|min:0',
             'harga_beli' => 'required|numeric|min:0',
