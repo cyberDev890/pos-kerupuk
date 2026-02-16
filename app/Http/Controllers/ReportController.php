@@ -68,7 +68,8 @@ class ReportController extends Controller
         $netReturnImpact = $totalReturnRevenue - $totalReturnCOGS; // Lost Profit
         
         // Net Profit = Gross Profit - Returns Impact - Salaries - Operational Costs
-        $netProfit = $grossProfit - $netReturnImpact - $totalSalary - $totalOperationalCost;
+        $salesProfit = $grossProfit - $netReturnImpact;
+        $netProfit = $salesProfit - $totalSalary - $totalOperationalCost;
 
         return view('report.profit_loss', compact(
             'startDate', 'endDate', 
@@ -76,7 +77,7 @@ class ReportController extends Controller
             'totalRevenue', 'totalCOGS', 
             'totalReturnRevenue', 'totalReturnCOGS',
             'totalSalary', 'totalOperationalCost',
-            'grossProfit', 'netProfit'
+            'grossProfit', 'salesProfit', 'netProfit'
         ));
     }
 

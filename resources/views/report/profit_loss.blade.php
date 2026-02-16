@@ -23,6 +23,7 @@
 </div>
 
 <div class="row">
+    <!-- Row 1: Sales Metrics -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
             <div class="inner">
@@ -57,20 +58,24 @@
         </div>
     </div>
     <div class="col-lg-3 col-6">
-        <div class="small-box {{ $netProfit >= 0 ? 'bg-success' : 'bg-danger' }}">
+        <div class="small-box {{ $salesProfit >= 0 ? 'bg-primary' : 'bg-danger' }}">
             <div class="inner">
-                <h5>Rp {{ number_format($netProfit, 0, ',', '.') }}</h5>
-                <p>Keuntungan Bersih</p>
+                <h5>Rp {{ number_format($salesProfit, 0, ',', '.') }}</h5>
+                <p>Laba Kotor Penjualan</p>
             </div>
             <div class="icon">
-                <i class="fas fa-money-bill-wave"></i>
+                <i class="fas fa-chart-line"></i>
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-6">
-        <div class="small-box bg-warning">
+</div>
+
+<div class="row">
+    <!-- Row 2: Operational Metrics -->
+    <div class="col-lg-4 col-6">
+        <div class="small-box bg-secondary">
             <div class="inner">
-                <h5>{{ number_format($totalSalary, 0, ',', '.') }}</h5>
+                <h5>Rp {{ number_format($totalSalary, 0, ',', '.') }}</h5>
                 <p>Total Gaji</p>
             </div>
             <div class="icon">
@@ -78,14 +83,25 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-6">
+    <div class="col-lg-4 col-6">
         <div class="small-box bg-secondary">
             <div class="inner">
-                <h5>{{ number_format($totalOperationalCost, 0, ',', '.') }}</h5>
-                <p>Biaya Ops</p>
+                <h5>Rp {{ number_format($totalOperationalCost, 0, ',', '.') }}</h5>
+                <p>Biaya Operasional</p>
             </div>
             <div class="icon">
                 <i class="fas fa-tools"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-12">
+        <div class="small-box {{ $netProfit >= 0 ? 'bg-success' : 'bg-danger' }}">
+            <div class="inner">
+                <h5>Rp {{ number_format($netProfit, 0, ',', '.') }}</h5>
+                <p>Keuntungan Bersih (Akhir)</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-money-bill-wave"></i>
             </div>
         </div>
     </div>
