@@ -33,7 +33,9 @@
                             if (result.isConfirmed) {
                                 printRaw(transactionId);
                             } else if (result.isDenied) {
-                                window.open("{{ url('transaction/sales') }}/" + transactionId + "/invoice", "_blank");
+                                let url = "{{ route('transaction.sales.invoice', ':id', false) }}";
+                                url = url.replace(':id', transactionId);
+                                window.open(url, "_blank");
                             }
                         });
                     } else {
@@ -59,7 +61,9 @@
                     });
 
                     // 1. Ambil Data RAW
-                    fetch("{{ url('transaction/sales') }}/" + id + "/print-raw", {
+                    let url = "{{ route('transaction.sales.print-raw', ':id', false) }}";
+                    url = url.replace(':id', id);
+                    fetch(url, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',

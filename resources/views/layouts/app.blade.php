@@ -139,7 +139,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         // QZ Tray Security Configuration
         qz.security.setCertificatePromise(function(resolve, reject) {
-            fetch("{{ route('transaction.qz.certificate') }}")
+            fetch("{{ route('transaction.qz.certificate', [], false) }}")
                 .then(data => data.text())
                 .then(resolve)
                 .catch(reject);
@@ -147,7 +147,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         qz.security.setSignaturePromise(function(toSign) {
             return function(resolve, reject) {
-                fetch("{{ route('transaction.qz.sign') }}", {
+                fetch("{{ route('transaction.qz.sign', [], false) }}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

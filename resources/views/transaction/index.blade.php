@@ -147,7 +147,7 @@
         $('#modalDetail').modal('show');
         
         // Fetch Data
-        $.get("{{ url('transaction/sales') }}/" + id, function(data) {
+        $.get("/transaction/sales/" + id, function(data) {
             $('#detNoFaktur').text(data.no_transaksi);
             $('#detTanggal').text(data.tanggal); // Format date if needed
             $('#detPelanggan').text(data.customer ? data.customer.nama : 'Umum');
@@ -216,7 +216,7 @@
         });
 
         // 1. Ambil Data RAW dari Server
-        let url = "{{ route('transaction.sales.print-raw', ':id') }}";
+        let url = "{{ route('transaction.sales.print-raw', ':id', false) }}";
         url = url.replace(':id', id);
 
         fetch(url, {
