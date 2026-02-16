@@ -1,6 +1,11 @@
 @extends('layouts.app')
 @section('content_title', 'Input Pembelian')
 @section('content')
+@section('styles')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+@endsection
 <form action="{{ route('transaction.purchase.store') }}" method="POST">
     @csrf
     <div class="row">
@@ -126,6 +131,11 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+        // Initialize Select2
+        $('#productSelect').select2({
+            theme: 'bootstrap4'
+        });
+
         let cart = [];
         let grandTotal = 0;
 
@@ -226,4 +236,16 @@
     });
 </script>
 @endsection
+@endsection
+@section('scripts')
+    <!-- Select2 -->
+    <script src="{{ asset('adminlte') }}/plugins/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Re-initialize Select2 if needed or ensure it loads correctly
+             $('.select2').select2({
+                theme: 'bootstrap4'
+            })
+        });
+    </script>
 @endsection
