@@ -26,66 +26,42 @@ class GenerateQZKeys extends Command
      */
     public function handle()
     {
-        $this->info("Generating QZ Tray Keys...");
+        $this->info("Generating Single Self-Signed Certificate for QZ Tray...");
 
         // Ensure directory exists
         if (!file_exists(storage_path('app/qz'))) {
             mkdir(storage_path('app/qz'), 0755, true);
         }
 
-        // 1. Generate Private Key for CA
-        $caPrivKey = openssl_pkey_new([
+        // 1. Generate Private Key
+        $privKey = openssl_pkey_new([
             "private_key_bits" => 2048,
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
         ]);
-        openssl_pkey_export($caPrivKey, $caPrivKeyPem);
-        file_put_contents(storage_path('app/qz/root-ca.key'), $caPrivKeyPem);
-        $this->info("Generated root-ca.key");
+        openssl_pkey_export($privKey, $privKeyPem);
+        file_put_contents(storage_path('app/qz/private-key.pem'), $privKeyPem);
+        $this->info("Generated private-key.pem");
 
-        // 2. Generate Self-Signed CA Certificate
+        // 2. Generate Self-Signed Certificate (Acts as Root AND App Cert)
         $dn = [
             "countryName" => "ID",
             "stateOrProvinceName" => "Jawa Timur",
             "localityName" => "Jember",
             "organizationName" => "Jaya Abadi POS",
-            "organizationalUnitName" => "IT Dept",
-            "commonName" => "Jaya Abadi POS Root CA",
-            "emailAddress" => "admin@jayaabadi.com"
-        ];
-        $csr = openssl_csr_new($dn, $caPrivKey);
-        $caCert = openssl_csr_sign($csr, null, $caPrivKey, 3650); // 10 Years
-        openssl_x509_export($caCert, $caCertPem);
-        file_put_contents(storage_path('app/qz/root-ca.crt'), $caCertPem);
-        $this->info("Generated root-ca.crt (Install this on Client PC!)");
-
-        // 3. Generate Private Key for Application (to sign messages)
-        $appPrivKey = openssl_pkey_new([
-            "private_key_bits" => 2048,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
-        ]);
-        openssl_pkey_export($appPrivKey, $appPrivKeyPem);
-        file_put_contents(storage_path('app/qz/private-key.pem'), $appPrivKeyPem);
-        $this->info("Generated private-key.pem (Used by Laravel)");
-
-        // 4. Generate Certificate for Application (Signed by our CA)
-        $appDn = [
-            "countryName" => "ID",
-            "stateOrProvinceName" => "Jawa Timur",
-            "localityName" => "Jember",
-            "organizationName" => "Jaya Abadi POS",
             "organizationalUnitName" => "POS System",
-            "commonName" => "jayaabadi.rayhn.my.id", // MATCH DOMAIN!
+            "commonName" => "jayaabadi.rayhn.my.id", // MATCH DOMAIN
             "emailAddress" => "system@jayaabadi.com"
         ];
-        $appCsr = openssl_csr_new($appDn, $appPrivKey);
-        $appCert = openssl_csr_sign($appCsr, $caCert, $caPrivKey, 3650);
-        openssl_x509_export($appCert, $appCertPem);
+        $csr = openssl_csr_new($dn, $privKey);
+        $cert = openssl_csr_sign($csr, null, $privKey, 3650); // 10 Years
+        openssl_x509_export($cert, $certPem);
         
-        // Combine App Cert + Root CA for full chain
-        $fullChain = $appCertPem . "\n" . $caCertPem;
-        file_put_contents(storage_path('app/qz/digital-certificate.txt'), $fullChain);
-        $this->info("Generated digital-certificate.txt (Chain: App + Root CA)");
-
-        $this->info("All keys generated successfully in storage/app/qz/");
+        file_put_contents(storage_path('app/qz/digital-certificate.txt'), $certPem);
+        
+        // Copy to root-ca.crt for the setup page download link (same file)
+        file_put_contents(storage_path('app/qz/root-ca.crt'), $certPem);
+        
+        $this->info("Generated digital-certificate.txt & root-ca.crt");
+        $this->info("Done! Please re-install 'root-ca.crt' on the client machine.");
     }
 }
