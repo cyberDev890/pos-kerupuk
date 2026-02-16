@@ -335,37 +335,46 @@ class TransactionController extends Controller
     // QZ Tray Security
     public function qzCertificate()
     {
-        $path = storage_path('app/qz/digital-certificate.txt');
-        if(!file_exists($path)) return response("Certificate not found", 404);
-        return response()->file($path, ['Content-Type' => 'text/plain']);
+        try {
+            $path = storage_path('app/qz/digital-certificate.txt');
+            if(!file_exists($path)) return response("Certificate file not found", 404);
+            return response()->file($path, ['Content-Type' => 'text/plain']);
+        } catch (\Exception $e) {
+            return response("Error reading cert: " . $e->getMessage(), 500);
+        }
     }
 
     public function qzSign(Request $request) 
     {
-        $requestData = $request->input('request'); // The data to sign
-        $privateKeyPath = storage_path('app/qz/private-key.pem');
-        
-        if(!file_exists($privateKeyPath)) {
-            \Log::error("QZ Sign: Private Key not found at " . $privateKeyPath);
-            return response("Private Key not found", 404);
-        }
+        try {
+            $requestData = $request->input('request'); 
+            $privateKeyPath = storage_path('app/qz/private-key.pem');
+            
+            if(!file_exists($privateKeyPath)) {
+                return response("Private Key not found at " . $privateKeyPath, 404);
+            }
+            
+            if (!is_readable($privateKeyPath)) {
+                 $perms = substr(sprintf('%o', fileperms($privateKeyPath)), -4);
+                 return response("Private Key not readable. Perms: $perms", 500);
+            }
 
-        // Use openssl_pkey_get_private to handle formatting (CRLF etc) safely
-        $privateKeyContent = file_get_contents($privateKeyPath);
-        $privateKey = openssl_pkey_get_private($privateKeyContent);
+            $privateKeyContent = file_get_contents($privateKeyPath);
+            $privateKey = openssl_pkey_get_private($privateKeyContent);
 
-        if (!$privateKey) {
-            \Log::error("QZ Sign: Invalid Private Key Format");
-            return response("Invalid Private Key", 500);
+            if (!$privateKey) {
+                return response("Invalid Private Key Format", 500);
+            }
+            
+            $signature = null;
+            if (openssl_sign($requestData, $signature, $privateKey, "sha512")) { 
+                return base64_encode($signature);
+            }
+            
+            return response("Failed to sign: " . openssl_error_string(), 500);
+        } catch (\Exception $e) {
+             return response("Sign Exception: " . $e->getMessage(), 500);
         }
-        
-        $signature = null;
-        if (openssl_sign($requestData, $signature, $privateKey, "sha512")) { 
-            return base64_encode($signature);
-        }
-        
-        \Log::error("QZ Sign Failed: " . openssl_error_string());
-        return response("Failed to sign: " . openssl_error_string(), 500);
     }
     public function setupQZ()
     {
