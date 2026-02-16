@@ -52,15 +52,30 @@ class ReportController extends Controller
             }
         }
 
+        // 3. Salaries
+        $salaries = \App\Models\Salary::whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate)
+            ->get();
+        $totalSalary = $salaries->sum('amount');
+
+        // 4. Operational Costs
+        $operationalCosts = \App\Models\OperationalCost::whereDate('date', '>=', $startDate)
+            ->whereDate('date', '<=', $endDate)
+            ->get();
+        $totalOperationalCost = $operationalCosts->sum('amount');
+
         $grossProfit = $totalRevenue - $totalCOGS;
         $netReturnImpact = $totalReturnRevenue - $totalReturnCOGS; // Lost Profit
-        $netProfit = $grossProfit - $netReturnImpact;
+        
+        // Net Profit = Gross Profit - Returns Impact - Salaries - Operational Costs
+        $netProfit = $grossProfit - $netReturnImpact - $totalSalary - $totalOperationalCost;
 
         return view('report.profit_loss', compact(
             'startDate', 'endDate', 
-            'transactions', 'returns',
+            'transactions', 'returns', 'salaries', 'operationalCosts',
             'totalRevenue', 'totalCOGS', 
             'totalReturnRevenue', 'totalReturnCOGS',
+            'totalSalary', 'totalOperationalCost',
             'grossProfit', 'netProfit'
         ));
     }
