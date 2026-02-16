@@ -374,10 +374,20 @@ class TransactionController extends Controller
 
     public function downloadCA()
     {
-        $path = storage_path('app/qz/root-ca.crt');
-        if(!file_exists($path)) {
-            return back()->with('error', 'CA Certificate belum dibuat. Jalankan command artisan qz:generate-keys dulu.');
+        try {
+            $path = storage_path('app/qz/root-ca.crt');
+            
+            if (!file_exists($path)) {
+                return 'File not found at: ' . $path;
+            }
+            
+            if (!is_readable($path)) {
+                return 'File exists but is not readable. Perms: ' . substr(sprintf('%o', fileperms($path)), -4);
+            }
+
+            return response()->download($path, 'JayaAbadi-POS-RootCA.crt');
+        } catch (\Exception $e) {
+            return 'Error: ' . $e->getMessage();
         }
-        return response()->download($path, 'JayaAbadi-POS-RootCA.crt');
     }
 }
