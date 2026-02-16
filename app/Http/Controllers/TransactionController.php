@@ -368,7 +368,7 @@ class TransactionController extends Controller
             
             $signature = null;
             if (openssl_sign($requestData, $signature, $privateKey, "sha512")) { 
-                return base64_encode($signature);
+                return response(base64_encode($signature))->header('Content-Type', 'text/plain');
             }
             
             return response("Failed to sign: " . openssl_error_string(), 500);

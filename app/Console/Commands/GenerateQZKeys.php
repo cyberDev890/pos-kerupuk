@@ -74,18 +74,17 @@ class GenerateQZKeys extends Command
             "localityName" => "Jember",
             "organizationName" => "Jaya Abadi POS",
             "organizationalUnitName" => "POS System",
-            "commonName" => "Jaya Abadi POS", // Must match what QZ Tray expects or just be valid
+            "commonName" => "jayaabadi.rayhn.my.id", // MATCH DOMAIN!
             "emailAddress" => "system@jayaabadi.com"
         ];
         $appCsr = openssl_csr_new($appDn, $appPrivKey);
         $appCert = openssl_csr_sign($appCsr, $caCert, $caPrivKey, 3650);
         openssl_x509_export($appCert, $appCertPem);
         
-        // QZ Tray expects the public certificate chain. 
-        // We probably only need the app cert, but having the chain is good.
-        // For simplicity, just the public cert.
-        file_put_contents(storage_path('app/qz/digital-certificate.txt'), $appCertPem);
-        $this->info("Generated digital-certificate.txt (Used by QZ Tray JS)");
+        // Combine App Cert + Root CA for full chain
+        $fullChain = $appCertPem . "\n" . $caCertPem;
+        file_put_contents(storage_path('app/qz/digital-certificate.txt'), $fullChain);
+        $this->info("Generated digital-certificate.txt (Chain: App + Root CA)");
 
         $this->info("All keys generated successfully in storage/app/qz/");
     }
