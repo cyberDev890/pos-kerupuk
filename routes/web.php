@@ -90,5 +90,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
     });
+    
+    // Anggaran (Budget)
+    Route::prefix('budget')->name('budget.')->group(function () {
+        Route::resource('salary', \App\Http\Controllers\SalaryController::class)->except(['create', 'show', 'edit']);
+        Route::resource('operational', \App\Http\Controllers\OperationalCostController::class)->except(['create', 'show', 'edit']);
+    });
 
 });

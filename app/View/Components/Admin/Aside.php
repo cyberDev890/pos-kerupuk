@@ -168,6 +168,24 @@ class Aside extends Component
                     ],
                 ],
             ],
+            [
+                'label' => 'Anggaran',
+                'icon' => 'fas fa-money-bill-wave',
+                'route_active' => 'budget.*',
+                'is_dropdown' => true,
+                'dropdown' => [
+                    [
+                        'label' => 'Gaji Karyawan',
+                        'route_name' => 'budget.salary.index',
+                        'route_active' => 'budget.salary.*',
+                    ],
+                    [
+                        'label' => 'Biaya Operasional',
+                        'route_name' => 'budget.operational.index',
+                        'route_active' => 'budget.operational.*',
+                    ],
+                ],
+            ],
         ];
     }
 
