@@ -32,15 +32,16 @@ class SalaryController extends Controller
     public function store(Request $request)
     {
         //
+        $request->merge([
+            'amount' => str_replace('.', '', $request->amount)
+        ]);
+
         $request->validate([
             'name' => 'required|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
             'description' => 'nullable|string',
         ]);
-
-        $currency = str_replace('.', '', $request->amount);
-        $request->merge(['amount' => $currency]);
         
         Salary::create($request->all());
 
@@ -70,15 +71,16 @@ class SalaryController extends Controller
     public function update(Request $request, Salary $salary)
     {
         //
+        $request->merge([
+            'amount' => str_replace('.', '', $request->amount)
+        ]);
+
         $request->validate([
             'name' => 'required|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
             'description' => 'nullable|string',
         ]);
-
-        $currency = str_replace('.', '', $request->amount);
-        $request->merge(['amount' => $currency]);
 
         $salary->update($request->all());
 

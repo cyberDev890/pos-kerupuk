@@ -32,14 +32,15 @@ class OperationalCostController extends Controller
     public function store(Request $request)
     {
         //
+        $request->merge([
+            'amount' => str_replace('.', '', $request->amount)
+        ]);
+
         $request->validate([
             'description' => 'required|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
         ]);
-
-        $currency = str_replace('.', '', $request->amount);
-        $request->merge(['amount' => $currency]);
 
         OperationalCost::create($request->all());
 
@@ -50,7 +51,7 @@ class OperationalCostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OperationalCost $operationalCost)
+    public function show(OperationalCost $operational)
     {
         //
     }
@@ -58,7 +59,7 @@ class OperationalCostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(OperationalCost $operationalCost)
+    public function edit(OperationalCost $operational)
     {
         //
     }
@@ -66,19 +67,20 @@ class OperationalCostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OperationalCost $operationalCost)
+    public function update(Request $request, OperationalCost $operational)
     {
         //
+        $request->merge([
+            'amount' => str_replace('.', '', $request->amount)
+        ]);
+
         $request->validate([
             'description' => 'required|string',
             'amount' => 'required|numeric',
             'date' => 'required|date',
         ]);
 
-        $currency = str_replace('.', '', $request->amount);
-        $request->merge(['amount' => $currency]);
-
-        $operationalCost->update($request->all());
+        $operational->update($request->all());
 
         toast('Biaya operasional berhasil diperbarui', 'success');
         return back();
@@ -87,10 +89,10 @@ class OperationalCostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OperationalCost $operationalCost)
+    public function destroy(OperationalCost $operational)
     {
         //
-        $operationalCost->delete();
+        $operational->delete();
         toast('Biaya operasional berhasil dihapus', 'success');
         return back();
     }

@@ -33,14 +33,10 @@
                                         data-target="#modal-edit-{{ $cost->id }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <form action="{{ route('budget.operational.destroy', $cost->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" data-confirm-delete="true">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <a href="{{ route('budget.operational.destroy', $cost->id) }}" class="btn btn-danger btn-sm"
+                                        data-confirm-delete="true">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
 
