@@ -83,10 +83,32 @@ EOL;
         $this->info("Generated private-key.pem");
 
         // 3. Generate CSR & Self-Signed Cert using Config
-        $csr = openssl_csr_new([], $privKey, ["config" => $configFile]); // DN comes from config
+        // Explicitly pass DN array to ensure it's set, using config for extensions
+        $dn = [
+            "countryName" => "ID",
+            "stateOrProvinceName" => "Jawa Timur",
+            "localityName" => "Jember",
+            "organizationName" => "Jaya Abadi POS",
+            "organizationalUnitName" => "POS System",
+            "commonName" => $domain,
+            "emailAddress" => "system@jayaabadi.com"
+        ];
+
+        $csr = openssl_csr_new($dn, $privKey, ["config" => $configFile, "digest_alg" => "sha256"]);
+        
+        if (!$csr) {
+            $this->error("Failed to generate CSR: " . openssl_error_string());
+            return;
+        }
         
         // Sign with extensions
         $cert = openssl_csr_sign($csr, null, $privKey, 3650, ["config" => $configFile, "digest_alg" => "sha256"]);
+        
+        if (!$cert) {
+            $this->error("Failed to sign CSR: " . openssl_error_string());
+            return;
+        }
+
         openssl_x509_export($cert, $certPem);
         
         file_put_contents(storage_path('app/qz/digital-certificate.txt'), $certPem);
@@ -94,7 +116,9 @@ EOL;
         
         // Verify output
         $details = openssl_x509_parse($certPem);
-        $this->info("Certificate Generated for CN: " . $details['subject']['CN']);
+        $cn = $details['subject']['CN'] ?? 'Unknown';
+        
+        $this->info("Certificate Generated for CN: " . $cn);
         $this->info("Extensions present: " . implode(", ", array_keys($details['extensions'] ?? [])));
         
         $this->info("Done! Please RE-INSTALL 'root-ca.crt' on the client machine.");
