@@ -158,7 +158,10 @@
                             <td>
                                 <ul class="pl-3 mb-0">
                                 @foreach($ret->details as $detail)
-                                    <li>{{ $detail->product->nama_produk }} ({{ $detail->jumlah }} {{ $detail->unit->nama_satuan ?? '-' }})</li>
+                                    <li>
+                                        {{ optional($detail->product)->nama_produk ?? 'Item Terhapus' }} 
+                                        ({{ $detail->jumlah }} {{ optional($detail->unit)->nama_satuan ?? '' }})
+                                    </li>
                                 @endforeach
                                 </ul>
                             </td>
