@@ -367,4 +367,17 @@ class TransactionController extends Controller
         \Log::error("QZ Sign Failed: " . openssl_error_string());
         return response("Failed to sign: " . openssl_error_string(), 500);
     }
+    public function setupQZ()
+    {
+        return view('transaction.setup-qz');
+    }
+
+    public function downloadCA()
+    {
+        $path = storage_path('app/qz/root-ca.crt');
+        if(!file_exists($path)) {
+            return back()->with('error', 'CA Certificate belum dibuat. Jalankan command artisan qz:generate-keys dulu.');
+        }
+        return response()->download($path, 'JayaAbadi-POS-RootCA.crt');
+    }
 }

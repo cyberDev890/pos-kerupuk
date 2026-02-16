@@ -73,6 +73,10 @@ Route::middleware('auth')->group(function () {
              // QZ Tray Security Routes
              Route::get('/qz/certificate', [TransactionController::class, 'qzCertificate'])->name('qz.certificate');
              Route::post('/qz/sign', [TransactionController::class, 'qzSign'])->name('qz.sign');
+             
+             // QZ Setup (Download CA)
+             Route::get('/qz/setup', [TransactionController::class, 'setupQZ'])->name('qz.setup');
+             Route::get('/qz/download-ca', [TransactionController::class, 'downloadCA'])->name('qz.download-ca');
         });
 
         Route::get('return/search', [ReturnController::class, 'searchTransaction'])->name('return.search');
