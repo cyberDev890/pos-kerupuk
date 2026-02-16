@@ -129,6 +129,8 @@
 </form>
 
 @section('scripts')
+<!-- Select2 -->
+<script src="{{ asset('adminlte') }}/plugins/select2/js/select2.full.min.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize Select2
@@ -237,15 +239,4 @@
 </script>
 @endsection
 @endsection
-@section('scripts')
-    <!-- Select2 -->
-    <script src="{{ asset('adminlte') }}/plugins/select2/js/select2.full.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Re-initialize Select2 if needed or ensure it loads correctly
-             $('.select2').select2({
-                theme: 'bootstrap4'
-            })
-        });
-    </script>
-@endsection
+
