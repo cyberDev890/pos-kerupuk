@@ -378,16 +378,25 @@ class TransactionController extends Controller
             $path = storage_path('app/qz/root-ca.crt');
             
             if (!file_exists($path)) {
-                return 'File not found at: ' . $path;
+                return response("DEBUG: File not found at " . $path, 404);
             }
             
-            if (!is_readable($path)) {
-                return 'File exists but is not readable. Perms: ' . substr(sprintf('%o', fileperms($path)), -4);
+            // Debug Permissions
+            $perms = substr(sprintf('%o', fileperms($path)), -4);
+            $owner = posix_getpwuid(fileowner($path))['name'];
+            
+            // Manual Download Headers
+            $content = file_get_contents($path);
+            if ($content === false) {
+                 return response("DEBUG: Failed to read file. Owner: $owner, Perms: $perms", 500);
             }
 
-            return response()->download($path, 'JayaAbadi-POS-RootCA.crt');
-        } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            return response($content)
+                ->header('Content-Type', 'application/x-x509-ca-cert')
+                ->header('Content-Disposition', 'attachment; filename="JayaAbadi-POS-RootCA.crt"');
+
+        } catch (\Throwable $e) {
+            return response("DEBUG EXCEPTION: " . $e->getMessage() . " on line " . $e->getLine(), 500);
         }
     }
 }
