@@ -31,14 +31,21 @@ class DashboardController extends Controller
                                 ->take(5)
                                 ->get();
 
-        // 4. Sales Chart (Last 7 Days)
+        // 4. Sales Chart (Last 7 Days) - Optimized to 1 Query
+        $startDate = now()->subDays(6)->startOfDay();
+        $salesData = \App\Models\Transaction::where('tanggal', '>=', $startDate)
+                        ->selectRaw('DATE(tanggal) as date, SUM(total_harga) as total')
+                        ->groupBy('date')
+                        ->pluck('total', 'date')
+                        ->toArray();
+
         $chartData = [];
         $chartLabels = [];
         for ($i = 6; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
-            $dailyRevenue = \App\Models\Transaction::whereDate('tanggal', $date)->sum('total_harga');
-            $chartLabels[] = now()->subDays($i)->format('d M');
-            $chartData[] = $dailyRevenue;
+            $label = now()->subDays($i)->format('d M');
+            $chartLabels[] = $label;
+            $chartData[] = $salesData[$date] ?? 0;
         }
 
         // 5. Recent Transactions
