@@ -46,14 +46,12 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label>Jumlah yang Dipindah</label>
+                    <label>Jumlah Mutasi (Satuan Ball/Besar)</label>
                      <div class="input-group mb-3">
                         <input type="number" name="jumlah" class="form-control" placeholder="0" min="1" required>
                         <div class="input-group-append">
-                            <select name="unit_choice" id="unitChoice" class="form-control" style="max-width: 100px;">
-                                <option value="kecil">Pcs</option>
-                                <option value="besar">Bal</option>
-                            </select>
+                            <span class="input-group-text big-unit-name">Ball</span>
+                            <input type="hidden" name="unit_choice" value="besar">
                         </div>
                     </div>
                     <small class="text-muted" id="conversionInfo"></small>
@@ -80,10 +78,7 @@
             $('#infoGudang').text(data.stokGudang);
             $('#infoToko').text(data.stokToko);
             $('.unit-name').text(data.unit);
-            
-            // Update Unit Options
-            $('#unitChoice option[value="kecil"]').text(data.unit);
-            $('#unitChoice option[value="besar"]').text(data.unitBesar || 'Bal');
+            $('.big-unit-name').text(data.unitBesar || 'Bal');
             
             $('#conversionInfo').text("1 " + (data.unitBesar || 'Bal') + " = " + (data.isi || 1) + " " + (data.unit || 'Pcs'));
             
