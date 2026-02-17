@@ -41,8 +41,8 @@
     <div class="card-body p-0">
         <form action="{{ route('master-data.customer.storePrices', $customer->id) }}" method="POST">
             @csrf
-            <div class="table-responsive" style="max-height: 600px">
-                <table class="table table-head-fixed text-nowrap table-hover">
+            <div class="table-responsive">
+                <table class="table table-hover" id="table-harga-khusus">
                     <thead>
                         <tr>
                             <th>Produk</th>
@@ -113,6 +113,23 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+        // Initialize DataTable
+        $('#table-harga-khusus').DataTable({
+            "paging": false,
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "language": {
+                "search": "Cari Produk:",
+                "info": "Menampilkan _TOTAL_ produk",
+                "infoEmpty": "Tidak ada produk",
+                "infoFiltered": "(difilter dari _MAX_ total produk)"
+            }
+        });
+
         // Validate Price on Input
         $(document).on('input', '.price-input', function() {
             validatePrice(this);
