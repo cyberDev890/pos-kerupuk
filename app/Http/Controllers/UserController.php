@@ -26,18 +26,29 @@ class UserController extends Controller
             [
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email,' . $id,
+                'role' => 'required|in:admin,karyawan',
             ],
             [
                 'name.required' => 'Nama wajib diisi.',
                 'email.required' => 'Email wajib diisi.',
                 'email.email' => 'Format email tidak valid.',
                 'email.unique' => 'Email sudah digunakan.',
+                'role.required' => 'Role wajib dipilih.',
+                'role.in' => 'Role tidak valid.',
             ]
         );
         $newRequest = $request->all();
         if (!$id) {
             $newRequest['password'] = Hash::make('123456');
         }
+
+        // Ensure permissions is stored correctly
+        if ($request->has('permissions')) {
+            $newRequest['permissions'] = $request->permissions;
+        } else {
+            $newRequest['permissions'] = [];
+        }
+
         User::updateOrCreate(['id' => $id], $newRequest);
         toast('Data user berhasil disimpan.', 'success');
         return redirect()->route('users.index');

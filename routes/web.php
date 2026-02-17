@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::prefix('users')->as('users.')->controller(UserController::class)->group(function () {
+    Route::prefix('users')->as('users.')->middleware('permission:users')->controller(UserController::class)->group(function () {
         Route::get('/', 'Index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::delete('/{id}/destroy', 'destroy')->name('destroy');
@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     });
     //master-data.kategori.index
     //master-data.kategori/index
-    Route::prefix('master-data')->as('master-data.')->group(function () {
+    Route::prefix('master-data')->as('master-data.')->middleware('permission:master-data,master-data.kategori,master-data.product,master-data.unit,master-data.supplier,master-data.customer')->group(function () {
         Route::prefix('kategori')->as('kategori.')->controller(KategoriController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/', 'store')->name('store');
@@ -45,10 +45,12 @@ Route::middleware('auth')->group(function () {
         Route::get('customer/{id}/prices', [\App\Http\Controllers\CustomerController::class, 'getPrices'])->name('customer.getPrices');
         Route::post('customer/{id}/prices', [\App\Http\Controllers\CustomerController::class, 'storePrices'])->name('customer.storePrices');
     });
-
+ 
     // Piutang (Receivables)
-    Route::prefix('receivable')->name('receivable.')->controller(\App\Http\Controllers\ReceivableController::class)->group(function () {
+    Route::prefix('receivable')->name('receivable.')->middleware('permission:receivable')->controller(\App\Http\Controllers\ReceivableController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/opening-balance', 'openingBalance')->name('opening-balance');
+        Route::post('/opening-balance', 'storeOpeningBalance')->name('opening-balance.store');
         Route::get('/{id}', 'show')->name('show');
         Route::post('/payment', 'storePayment')->name('payment.store');
         Route::get('/payment/{transactionId}/history', 'history')->name('payment.history');
@@ -56,9 +58,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/{customerId}/print-all', 'printCustomerFullHistory')->name('print-all');
     });
 
+    // Hutang (Payables)
+    Route::prefix('payable')->name('payable.')->middleware('permission:payable')->controller(\App\Http\Controllers\PayableController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{id}', 'show')->name('show');
+        Route::post('/payment', 'storePayment')->name('payment.store');
+        Route::get('/payment/{purchaseId}/history', 'history')->name('payment.history');
+    });
+ 
         // Transactions
         Route::prefix('transaction')->name('transaction.')->group(function () {
-             Route::resource('purchase', \App\Http\Controllers\PurchaseController::class);
+             Route::get('/purchase/opening-balance', [\App\Http\Controllers\PurchaseController::class, 'openingBalance'])->name('purchase.opening-balance')->middleware('permission:transaction.purchase.create');
+             Route::post('/purchase/opening-balance', [\App\Http\Controllers\PurchaseController::class, 'storeOpeningBalance'])->name('purchase.opening-balance.store')->middleware('permission:transaction.purchase.create');
+             Route::resource('purchase', \App\Http\Controllers\PurchaseController::class)->middleware('permission:transaction.purchase.create,transaction.purchase.index');
              
              // Sales
              Route::get('/sales', [TransactionController::class, 'index'])->name('sales.index');
@@ -78,21 +90,21 @@ Route::middleware('auth')->group(function () {
              Route::get('/qz/setup', [TransactionController::class, 'setupQZ'])->name('qz.setup');
              Route::get('/qz/download-ca', [TransactionController::class, 'downloadCA'])->name('qz.download-ca');
         });
-
+ 
         Route::get('return/search', [ReturnController::class, 'searchTransaction'])->name('return.search');
         Route::resource('return', ReturnController::class)->except(['show', 'edit', 'update']);
-
+ 
         // Reports
-        Route::get('/report/profit-loss', [\App\Http\Controllers\ReportController::class, 'profitLoss'])->name('report.profit-loss');
+        Route::get('/report/profit-loss', [\App\Http\Controllers\ReportController::class, 'profitLoss'])->name('report.profit-loss')->middleware('permission:report,report.profit-loss');
     // Stock Mutation
-    Route::prefix('stock/mutation')->name('stock.mutation.')->controller(\App\Http\Controllers\StockMutationController::class)->group(function () {
+    Route::prefix('stock/mutation')->name('stock.mutation.')->middleware('permission:stock-mutation')->controller(\App\Http\Controllers\StockMutationController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
     });
     
     // Anggaran (Budget)
-    Route::prefix('budget')->name('budget.')->group(function () {
+    Route::prefix('budget')->name('budget.')->middleware('permission:budget,budget.salary,budget.operational')->group(function () {
         Route::resource('salary', \App\Http\Controllers\SalaryController::class)->except(['create', 'show', 'edit']);
         Route::resource('operational', \App\Http\Controllers\OperationalCostController::class)->except(['create', 'show', 'edit']);
     });

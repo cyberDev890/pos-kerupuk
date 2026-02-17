@@ -44,18 +44,6 @@
                             </select>
                         </div>
                         <div class="form-group my-1">
-                            <label for="kategori_id_{{ $id ?? 'new' }}"> Kategori Produk</label>
-                            <select name="kategori_id" id="kategori_id_{{ $id ?? 'new' }}" class="form-control">
-                                <option value="">Pilih Kategori</option>
-                                @foreach ($kategori ?? [] as $item)
-                                    <option value="{{ $item->id }}"
-                                        {{ old('kategori_id', $kategori_id ?? '') == $item->id ? 'selected' : '' }}>
-                                        {{ $item->nama_kategori }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group my-1">
                             <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli</label>
                             <input type="text" class="form-control currency-input" name="harga_beli" id="harga_beli_{{ $id ?? 'new' }}"
                                 value="{{ number_format(old('harga_beli', $harga_beli ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli " onblur="validateProductForm('{{ $id ?? 'new' }}')">

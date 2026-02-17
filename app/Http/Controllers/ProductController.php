@@ -37,7 +37,6 @@ class ProductController extends Controller
             'harga_jual' => 'required|numeric|min:0',
             'harga_jual_besar' => 'nullable|numeric|min:0',
             'harga_beli' => 'required|numeric|min:0',
-            'kategori_id' => 'required|exists:kategoris,id',
             'stok_min' => 'required|numeric|min:0',
             'unit_id' => 'required|exists:units,id',
         ];
@@ -57,8 +56,6 @@ class ProductController extends Controller
                 'stok_min.required' => 'Stok minimal wajib diisi.',
                 'stok_min.numeric' => 'Stok minimal harus berupa angka.',
                 'stok_min.min' => 'Stok minimal minimal 0.',
-                'kategori_id.required' => 'Kategori wajib diisi.',
-                'kategori_id.exists' => 'Kategori tidak valid.',
                 'unit_id.required' => 'Satuan wajib diisi.',
                 'unit_id.exists' => 'Satuan tidak valid.',
             ]
@@ -88,7 +85,6 @@ class ProductController extends Controller
                 'harga_jual' => $request->harga_jual,
                 'harga_jual_besar' => $request->harga_jual_besar,
                 'harga_beli' => $request->harga_beli,
-                'kategori_id' => $request->kategori_id,
                 'stok' => $request->stok ?? 0, // Allow updating stock directly
                 'stok_gudang' => ($request->stok_gudang ?? 0) * $isi,
                 'stok_min' => $request->stok_min,

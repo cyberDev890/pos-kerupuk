@@ -120,8 +120,9 @@
             font-size: 14px;
         }
         .totals-table td {
-            padding: 5px 0;
+            padding: 3px 0;
             text-align: right;
+            font-size: 13px; /* Perkecil sedikit dari body (14px) */
         }
         .totals-table td:first-child {
             color: #555;
@@ -129,7 +130,6 @@
             font-weight: bold;
         }
         .totals-table .grand-total td {
-            font-size: 18px;
             font-weight: bold;
             border-top: 2px solid #333;
             padding-top: 10px;
@@ -163,15 +163,59 @@
         }
 
         @media print {
+            @page {
+                size: 165mm 217mm;
+                margin: 5mm;
+            }
             body { 
                 padding: 0; 
+                margin: 0;
                 -webkit-print-color-adjust: exact;
+                font-size: 11px; /* Perkecil lagi font */
             }
             .invoice-box {
                 box-shadow: none;
                 border: none;
+                width: 100%;
                 max-width: 100%;
                 padding: 0;
+            }
+            .totals-table td, .totals-table .grand-total td {
+                font-size: 10px !important; /* Samakan dengan No Invoice di print */
+            }
+            .payment-info, .payment-info span {
+                font-size: 10px !important;
+            }
+            .header {
+                margin-bottom: 5px; /* Sangat rapat */
+            }
+            .company-details h1 {
+                font-size: 18px;
+            }
+            .invoice-title {
+                font-size: 22px;
+            }
+            table.items {
+                margin-bottom: 10px;
+            }
+            table.items th, table.items td {
+                padding: 4px 8px; /* Sangat kompak */
+            }
+            .summary-section {
+                margin-top: 5px;
+            }
+            .totals-table td {
+                padding: 2px 0;
+            }
+            .footer {
+                margin-top: 10px; /* Jarak tanda tangan sangat sedikit */
+            }
+            .signature-line {
+                margin-top: 40px; /* Perkecil area tanda tangan */
+            }
+            .thank-you {
+                margin-top: 10px;
+                font-size: 10px;
             }
             .no-print {
                 display: none;
@@ -206,6 +250,10 @@
                     <tr>
                         <td>No Invoice:</td>
                         <td style="text-align: right;">#{{ $transaction->no_transaksi }}</td>
+                    </tr>
+                    <tr>
+                        <td>Kasir:</td>
+                        <td style="text-align: right;">{{ $transaction->user->name ?? '-' }}</td>
                     </tr>
                 </table>
             </div>
@@ -243,12 +291,10 @@
             <div class="payment-info">
                 <strong>STATUS PEMBAYARAN:</strong><br>
                 @if($transaction->remaining_debt > 0) 
-                    <span style="color: red; font-weight: bold; font-size: 16px;">BELUM LUNAS (HUTANG)</span>
+                    <span style="color: red; font-weight: bold;">BELUM LUNAS (HUTANG)</span>
                 @else
-                    <span style="color: green; font-weight: bold; font-size: 16px;">LUNAS</span>
+                    <span style="color: green; font-weight: bold;">LUNAS</span>
                 @endif
-                <br><br>
-                <small>Kasir: {{ $transaction->user->name ?? '-' }}</small>
             </div>
             <div class="totals">
                 <table class="totals-table">

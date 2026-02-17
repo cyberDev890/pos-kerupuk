@@ -57,16 +57,36 @@ class PurchaseController extends Controller
             $total_harga += $item['jumlah'] * $item['harga_satuan'];
         }
 
+        $bayar = $request->input('bayar');
+        if($bayar === null || $bayar === '') {
+            $bayar = $total_harga;
+        }
+
         $purchase = Purchase::create([
             'supplier_id' => $request->supplier_id,
             'tanggal' => $request->tanggal,
             'no_faktur' => $request->no_faktur,
             'keterangan' => $request->keterangan,
             'total_harga' => $total_harga,
+            'bayar' => $bayar,
+            'remaining_debt' => $total_harga - $bayar,
+            'status' => $bayar < $total_harga ? 'pending' : 'selesai',
             'user_id' => auth()->id(),
         ]);
 
+        // Record Payment if any
+        if ($bayar > 0) {
+            \App\Models\PurchasePayment::create([
+                'purchase_id' => $purchase->id,
+                'amount' => $bayar,
+                'payment_date' => $request->tanggal,
+                'note' => 'Pembayaran Awal',
+                'user_id' => auth()->id(),
+            ]);
+        }
+
         foreach ($request->cart as $item) {
+            // ... (rest of the logic remains same)
             $unit = Unit::find($item['unit_id']);
             $isi = $unit ? $unit->isi : 1;
             
@@ -154,5 +174,53 @@ class PurchaseController extends Controller
             DB::rollback();
             return back()->with('error', 'Gagal menghapus pembelian: ' . $e->getMessage());
         }
+    }
+
+    public function openingBalance()
+    {
+        $suppliers = Supplier::all();
+        
+        // Generate Auto Code for Opening Balance
+        $today = date('Ymd');
+        $prefix = 'HUT-' . $today;
+        $lastPurchase = Purchase::where('no_faktur', 'like', "$prefix%")->orderByDesc('id')->first();
+        
+        if ($lastPurchase) {
+            $lastNo = substr($lastPurchase->no_faktur, -4);
+            $newNo = str_pad($lastNo + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newNo = '0001';
+        }
+        
+        $no_faktur = $prefix . '-' . $newNo;
+
+        return view('purchase.opening-balance', compact('suppliers', 'no_faktur'));
+    }
+
+    public function storeOpeningBalance(Request $request)
+    {
+        $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'tanggal' => 'required|date',
+            'total_hutang' => 'required|numeric|min:1',
+            'no_faktur' => 'required|unique:purchases,no_faktur',
+        ]);
+
+        $total_hutang = $request->total_hutang;
+
+        $purchase = Purchase::create([
+            'supplier_id' => $request->supplier_id,
+            'tanggal' => $request->tanggal,
+            'no_faktur' => $request->no_faktur,
+            'keterangan' => $request->keterangan ?? 'Saldo Awal Hutang',
+            'total_harga' => $total_hutang,
+            'bayar' => 0,
+            'remaining_debt' => $total_hutang,
+            'status' => 'pending',
+            'user_id' => auth()->id(),
+        ]);
+
+        toast()->success('Saldo awal hutang berhasil disimpan.');
+        return redirect()->route('transaction.purchase.index');
     }
 }

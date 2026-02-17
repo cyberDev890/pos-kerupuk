@@ -613,8 +613,13 @@
             let bayar = parseFloat(bayarRaw) || 0;
             let customerId = $('#customerSelect').val();
             
-            if(grandTotal > 0 && bayar > 0) {
-                $('#btnCheckout').prop('disabled', false);
+            if(grandTotal > 0) {
+                // Allow checkout if fully paid OR if customer is selected (Debt allowed)
+                if (bayar >= grandTotal || customerId) {
+                    $('#btnCheckout').prop('disabled', false);
+                } else {
+                    $('#btnCheckout').prop('disabled', true);
+                }
 
                 if(bayar < grandTotal) {
                     // Cek Customer
@@ -628,7 +633,6 @@
                     } else {
                         $('#btnCheckout').html('<i class="fas fa-save"></i> Simpan (Hutang)');
                         $('#btnCheckout').removeClass('btn-primary btn-danger').addClass('btn-warning');
-                        $('#btnCheckout').prop('disabled', false);
                         
                         $('#kembalianDisplay').text('Kurang: ' + formatRupiah(grandTotal - bayar));
                         $('#kembalianDisplay').removeClass('text-success').addClass('text-danger');

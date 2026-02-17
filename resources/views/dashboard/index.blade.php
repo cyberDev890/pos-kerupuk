@@ -1,9 +1,14 @@
 @extends('layouts.app')
 @section('content_title', 'Dashboard')
 @section('content')
+@php
+    $canViewOmzet = auth()->user()->hasPermission('dashboard.view-omzet');
+    $colClass = $canViewOmzet ? 'col-lg-3 col-6' : 'col-lg-6 col-6';
+@endphp
+
 <div class="row">
     <!-- Today's Transactions -->
-    <div class="col-lg-3 col-6">
+    <div class="{{ $colClass }}">
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>{{ $todayTransactions }}</h3>
@@ -15,6 +20,8 @@
             <a href="{{ route('transaction.sales.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+
+    @if($canViewOmzet)
     <!-- Today's Revenue -->
     <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
@@ -41,8 +48,10 @@
              <a href="{{ route('report.profit-loss') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+    @endif
+
     <!-- Low Stock -->
-    <div class="col-lg-3 col-6">
+    <div class="{{ $colClass }}">
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>{{ count($lowStockProducts) }}</h3>
@@ -56,9 +65,15 @@
     </div>
 </div>
 
+@php
+    $bottomMainCol = $canViewOmzet ? 'col-lg-7' : 'col-lg-8';
+    $bottomSideCol = $canViewOmzet ? 'col-lg-5' : 'col-lg-4';
+@endphp
+
 <div class="row">
-    <!-- Sales Chart -->
-    <div class="col-lg-7">
+    <div class="{{ $bottomMainCol }}">
+        @if($canViewOmzet)
+        <!-- Sales Chart -->
         <div class="card">
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
@@ -71,6 +86,7 @@
                 </div>
             </div>
         </div>
+        @endif
         
         <!-- Recent Transactions -->
          <div class="card">
@@ -108,7 +124,7 @@
     </div>
     
     <!-- Low Stock List -->
-    <div class="col-lg-5">
+    <div class="{{ $bottomSideCol }}">
         <div class="card" id="low-stock-card">
             <div class="card-header">
                 <h3 class="card-title">Stok Menipis (<= Min)</h3>
@@ -143,48 +159,51 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     $(function () {
-        var ctx = document.getElementById('sales-chart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: @json($chartLabels),
-                datasets: [{
-                    label: 'Omzet',
-                    backgroundColor: 'rgba(60,141,188,0.9)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: 3,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: @json($chartData)
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: false
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false
-                        },
-                         ticks: {
-                            callback: function(value, index, values) {
-                                return 'Rp ' + value.toLocaleString('id-ID');
-                            }
-                        }
+        var chartElement = document.getElementById('sales-chart');
+        if (chartElement) {
+            var ctx = chartElement.getContext('2d');
+            var salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: @json($chartLabels),
+                    datasets: [{
+                        label: 'Omzet',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: 3,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: @json($chartData)
                     }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                             ticks: {
+                                callback: function(value, index, values) {
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }
+                            }
+                        }]
+                    }
                 }
-            }
-        });
+            });
+        }
     });
 </script>
 @endsection

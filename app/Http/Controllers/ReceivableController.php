@@ -122,4 +122,53 @@ class ReceivableController extends Controller
 
         return view('receivable.print_customer_history', compact('customer', 'transactions'));
     }
+
+    public function openingBalance()
+    {
+        $customers = Customer::all();
+        
+        // Generate Auto Code for Opening Balance (AR = Accounts Receivable)
+        $maxId = Transaction::withTrashed()->max('id') ?? 0;
+        $no_transaksi = 'ARX-' . date('Ymd') . '-' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT);
+
+        return view('receivable.opening-balance', compact('customers', 'no_transaksi'));
+    }
+
+    public function storeOpeningBalance(Request $request)
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'tanggal' => 'required|date',
+            'total_piutang' => 'required|numeric|min:1',
+            'no_transaksi' => 'required|unique:transactions,no_transaksi',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $transaction = Transaction::create([
+                'customer_id' => $request->customer_id,
+                'tanggal' => $request->tanggal,
+                'no_transaksi' => $request->no_transaksi,
+                'keterangan' => $request->keterangan ?? 'Saldo Awal Piutang',
+                'total_harga' => $request->total_piutang,
+                'bayar' => 0,
+                'kembalian' => 0,
+                'biaya_kirim' => 0,
+                'biaya_tambahan' => 0,
+                'remaining_debt' => $request->total_piutang,
+                'status' => 'pending',
+                'user_id' => auth()->id(),
+            ]);
+
+            DB::commit();
+
+            toast()->success('Saldo awal piutang berhasil disimpan.');
+            return redirect()->route('receivable.index');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Gagal menyimpan saldo awal: ' . $e->getMessage());
+        }
+    }
 }
