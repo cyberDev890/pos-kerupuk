@@ -13,15 +13,15 @@ class DashboardController extends Controller
         $startOfMonth = now()->startOfMonth()->format('Y-m-d');
         $endOfMonth = now()->endOfMonth()->format('Y-m-d');
 
-        // 1. Today's Stats
-        $todayTransactions = \App\Models\Transaction::whereDate('tanggal', $today)->count();
+        // 1. Today's Stats - Optimized for index usage
+        $todayTransactions = \App\Models\Transaction::where('tanggal', $today)->count();
         // Calculate Net Revenue (Excluding Shipping/Fees)
-        $todayRevenue = \App\Models\Transaction::whereDate('tanggal', $today)
+        $todayRevenue = \App\Models\Transaction::where('tanggal', $today)
                         ->sum(\Illuminate\Support\Facades\DB::raw('total_harga - biaya_kirim - biaya_tambahan'));
 
         // 2. This Month's Profit ( Simplified Logic )
-        $monthRevenue = \App\Models\Transaction::whereDate('tanggal', '>=', $startOfMonth)
-                                ->whereDate('tanggal', '<=', $endOfMonth)
+        $monthRevenue = \App\Models\Transaction::where('tanggal', '>=', $startOfMonth)
+                                ->where('tanggal', '<=', $endOfMonth)
                                 ->sum(\Illuminate\Support\Facades\DB::raw('total_harga - biaya_kirim - biaya_tambahan'));
 
         // 3. Low Stock Items (Threshold based on Product Setting)
