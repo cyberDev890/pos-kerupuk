@@ -25,7 +25,11 @@ class UserController extends Controller
         $request->validate(
             [
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email,' . $id,
+                'email' => [
+                    'required',
+                    'email',
+                    \Illuminate\Validation\Rule::unique('users')->ignore($id)->whereNull('deleted_at')
+                ],
                 'role' => 'required|in:admin,karyawan',
             ],
             [
@@ -37,6 +41,15 @@ class UserController extends Controller
                 'role.in' => 'Role tidak valid.',
             ]
         );
+
+        if (!$id) {
+            // Check if there is a trashed user with the same email
+            $trashedUser = User::onlyTrashed()->where('email', $request->email)->first();
+            if ($trashedUser) {
+                $trashedUser->forceDelete(); // Permanently delete to avoid unique constraint
+            }
+        }
+
         $newRequest = $request->all();
         if (!$id) {
             $newRequest['password'] = Hash::make('123456');
