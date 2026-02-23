@@ -56,7 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/payment/{transactionId}/history', 'history')->name('payment.history');
         Route::get('/payment/{transactionId}/print', 'printPaymentHistory')->name('payment.print');
         Route::get('/{customerId}/print-all', 'printCustomerFullHistory')->name('print-all');
-        Route::get('/payment/{transactionId}/print-raw', 'printRawPayment')->name('payment.print-raw');
+        Route::get('/payment/{id}/print-raw', 'printRawPayment')->name('payment.print-raw');
     });
 
     // Hutang (Payables)
