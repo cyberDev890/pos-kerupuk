@@ -29,7 +29,8 @@ class ReceivableController extends Controller
     {
         $customer = Customer::findOrFail($id);
         
-        $transactions = Transaction::where('customer_id', $id)
+        $transactions = Transaction::with('payments')
+            ->where('customer_id', $id)
             ->orderBy('tanggal', 'desc')
             ->orderBy('id', 'desc')
             ->get();
