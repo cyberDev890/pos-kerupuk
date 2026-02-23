@@ -94,7 +94,6 @@
             $('#infoArea').slideDown();
         });
 
-        });
     });
 </script>
 @endsection
