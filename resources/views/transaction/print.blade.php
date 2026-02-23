@@ -42,11 +42,13 @@
         /* Judul Toko Besar */
         h4 { font-size: 16px; font-weight: 900; margin-bottom: 5px; }
         
-        .limit-text {
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            max-width: 35mm;
+        .truncate {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100px; /* Sesuai saran teman (sekitar 7-8em) */
+            display: inline-block;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -77,9 +79,8 @@
         <div class="dashed"></div>
         
         <table>
-            @foreach($transaction->details as $detail)
             <tr>
-                <td colspan="3" style="padding-top: 3px;">{{ $detail->product->nama_produk }}</td>
+                <td colspan="3" style="padding-top: 3px;" class="truncate">{{ $detail->product->nama_produk }}</td>
             </tr>
             <tr>
                 <td>{{ $detail->jumlah + 0 }}x</td>

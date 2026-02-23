@@ -223,4 +223,17 @@ class PurchaseController extends Controller
         toast()->success('Saldo awal hutang berhasil disimpan.');
         return redirect()->route('transaction.purchase.index');
     }
+
+    public function printRawPurchase($id)
+    {
+        $purchase = Purchase::with(['supplier', 'details.product', 'user'])->findOrFail($id);
+
+        try {
+            // Browser Native Print: Return HTML View
+            return view('purchase.print_thermal', compact('purchase'));
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => "Gagal memuat struk: " . $e->getMessage()], 500);
+        }
+    }
 }

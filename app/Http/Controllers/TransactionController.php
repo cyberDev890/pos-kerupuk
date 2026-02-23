@@ -253,76 +253,16 @@ class TransactionController extends Controller
 
     public function printRaw($id)
     {
-        // QZ Tray Mode: Server generates commands, Client prints them.
+        // DIRECT PRINTING MODE: Server sends commands directly to a shared printer.
+        // Important: Shared Printer name MUST be 'pos_printer' in Windows.
         $transaction = \App\Models\Transaction::with(['details.product', 'customer', 'user'])->findOrFail($id);
 
         try {
-            // Use DummyConnector to generate RAW commands in memory
-            $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-            $printer = new \Mike42\Escpos\Printer($connector);
-
-            // Initialize
-            $printer->initialize();
-            
-            // Layout (Sama persis dengan sebelumnya)
-            $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
-            $printer->text("JAYA ABADI\n");
-            $printer->text("Jl. Ijen Dukusia Rambipuji\n");
-            $printer->text("082330634269\n");
-            $printer->text("-----------------------------\n"); // 29 Chars
-
-            $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_LEFT);
-            $printer->text("No  : " . $transaction->no_transaksi . "\n");
-            $printer->text("Tgl : " . date('d/m/Y H:i', strtotime($transaction->created_at)) . "\n");
-            $printer->text("Csr : " . ($transaction->user->name ?? '-') . "\n");
-            $printer->text("Plg : " . ($transaction->customer->nama ?? 'Umum') . "\n");
-            $printer->text("-----------------------------\n");
-
-            foreach ($transaction->details as $detail) {
-                $printer->text($detail->product->nama_produk . "\n");
-                $qtyDisplay = (float)$detail->jumlah; 
-                $line = $qtyDisplay . "x " . number_format($detail->harga_satuan, 0, ',', '.') . " = " . number_format($detail->subtotal, 0, ',', '.');
-                $printer->text($line . "\n");
-            }
-
-            $printer->text("-----------------------------\n");
-            
-            $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_RIGHT);
-            $printer->text("Total: " . number_format($transaction->total_harga, 0, ',', '.') . "\n");
-            
-            if($transaction->biaya_kirim > 0) {
-                $printer->text("Ongkir: " . number_format($transaction->biaya_kirim, 0, ',', '.') . "\n");
-            }
-            if($transaction->biaya_tambahan > 0) {
-                $printer->text("Lainnya: " . number_format($transaction->biaya_tambahan, 0, ',', '.') . "\n");
-            }
-
-            $printer->setEmphasis(true);
-            $printer->text("Grand Total: " . number_format($transaction->grand_total, 0, ',', '.') . "\n");
-            $printer->setEmphasis(false);
-            
-            $printer->text("Bayar: " . number_format($transaction->bayar, 0, ',', '.') . "\n");
-            $printer->text("Kembali: " . number_format($transaction->kembalian, 0, ',', '.') . "\n");
-
-            $printer->text("-----------------------------\n");
-            $printer->setJustification(\Mike42\Escpos\Printer::JUSTIFY_CENTER);
-            $printer->text("Terima Kasih\n");
-            
-            $printer->feed(3); 
-            $printer->cut();   
-            
-            // Get the binary data
-            $data = $connector->getData();
-            $printer->close();
-            
-            // Return base64 encoded data
-            return response()->json([
-                'success' => true, 
-                'data' => base64_encode($data)
-            ]);
+            // Browser Native Print: Return HTML View
+            return view('transaction.print_thermal', compact('transaction'));
 
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => "Gagal Generate Struk: " . $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => "Gagal memuat struk: " . $e->getMessage()], 500);
         }
     }
 

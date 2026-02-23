@@ -2,6 +2,14 @@
 
 @section('content_title', 'Mutasi Stok (Gudang -> Toko)')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <style>
+        .select2-container--bootstrap4 .select2-selection--single { height: calc(2.25rem + 2px) !important; }
+    </style>
+@endsection
+
 @section('content')
 <div class="card card-primary card-outline">
     <div class="card-header">
@@ -65,6 +73,7 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('adminlte') }}/plugins/select2/js/select2.full.min.js"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2({ theme: 'bootstrap4' });

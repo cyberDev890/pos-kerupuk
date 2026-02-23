@@ -57,6 +57,9 @@
                                 @endif
                             </td>
                             <td>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="printRaw({{ $trx->id }})" title="Cetak Thermal">
+                                    <i class="fas fa-print"></i>
+                                </button>
                                 <button type="button" class="btn btn-info btn-sm" onclick="showHistory({{ $trx->id }}, '{{ $trx->no_transaksi }}')">
                                     <i class="fas fa-history"></i> Riwayat
                                 </button>
@@ -199,6 +202,14 @@
             }
             $('#histBody').html(html);
         });
+    }
+
+    function printRaw(id) {
+        let url = "{{ route('receivable.payment.print-raw', ':id') }}";
+        url = url.replace(':id', id);
+        
+        // Open in new tab
+        window.open(url, '_blank');
     }
 
     function formatRupiah(angka) {

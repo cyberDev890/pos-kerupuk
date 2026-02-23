@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice - {{ $transaction->no_transaksi }}</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             color: #333;
@@ -164,21 +169,23 @@
 
         @media print {
             @page {
-                size: 165mm 217mm;
-                margin: 5mm;
+                size: auto;
+                margin: 20mm 5mm 5mm 5mm !important; /* Top margin 2cm sesuai request */
             }
             body { 
-                padding: 0; 
-                margin: 0;
+                padding: 0 !important; 
+                margin: 0 !important;
                 -webkit-print-color-adjust: exact;
-                font-size: 11px; /* Perkecil lagi font */
+                font-size: 11px;
             }
             .invoice-box {
                 box-shadow: none;
                 border: none;
                 width: 100%;
                 max-width: 100%;
-                padding: 0;
+                padding: 0 !important;
+                margin: 0 !important;
+                position: static;
             }
             .totals-table td, .totals-table .grand-total td {
                 font-size: 10px !important; /* Samakan dengan No Invoice di print */
@@ -218,12 +225,49 @@
                 font-size: 10px;
             }
             .no-print {
-                display: none;
+                display: none !important;
             }
+        }
+
+        .print-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-print {
+            padding: 10px 20px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        .btn-print-system {
+            background: #007bff;
+        }
+        .btn-print:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
-<body onload="window.print()">
+<body onload="/* Auto print disabled to promote Ctrl+Shift+P */">
+
+    <div class="print-actions no-print" style="position: static; margin-bottom: 20px;">
+        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 2px solid #ffeeba; text-align: center; max-width: 600px; margin: 20px auto;">
+            <h2 style="color: #856404; margin-bottom: 10px;">PANDUAN CETAK (PRINT)</h2>
+            <p style="font-size: 16px; margin-bottom: 15px;">Tekan tombol berikut pada keyboard Anda secara bersamaan untuk hasil cetak terbaik:</p>
+            <div style="font-size: 24px; font-weight: bold; background: #fff; padding: 15px; border-radius: 5px; display: inline-block; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                Ctrl + Shift + P
+            </div>
+            <p style="margin-top: 15px; color: #666; font-size: 13px;">(Akan membuka dialog printer Windows. Pilih **Nota Besar** di Printing Preferences agar pas dengan kertas)</p>
+        </div>
+    </div>
 
     <div class="invoice-box">
         <div class="header">

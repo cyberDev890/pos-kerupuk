@@ -35,6 +35,9 @@
                                 <td class="text-center">{{ $purchase->details_count }} Item</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center">
+                                        <button class="btn btn-warning btn-sm mr-1" onclick="printRaw({{ $purchase->id }})" title="Cetak Thermal">
+                                            <i class="fas fa-print"></i>
+                                        </button>
                                         <button class="btn btn-info btn-sm mr-1" onclick="showDetail({{ $purchase->id }})" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </button>
@@ -160,8 +163,17 @@
         });
     }
 
+    function printRaw(id) {
+        let url = "{{ route('transaction.purchase.print-raw', ':id') }}";
+        url = url.replace(':id', id);
+        
+        // Open in new tab
+        window.open(url, '_blank');
+    }
+
     function formatRupiah(angka) {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

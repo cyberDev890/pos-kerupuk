@@ -54,63 +54,11 @@
                 });
 
                 function printRaw(id) {
-                    Swal.fire({
-                        title: 'Mencetak via QZ Tray...',
-                        allowOutsideClick: false,
-                        didOpen: () => Swal.showLoading()
-                    });
-
-                    // 1. Ambil Data RAW
-                    let url = "{{ route('transaction.sales.print-raw', ':id', false) }}";
+                    let url = "{{ route('transaction.sales.print-raw', ':id') }}";
                     url = url.replace(':id', id);
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(res => res.json())
-                    .then(res => {
-                        if(!res.success) throw new Error(res.message);
-                        return res.data;
-                    })
-                    .then(base64Data => {
-                        // 2. Connect QZ Helper
-                        return window.connectToQZ().then(() => base64Data);
-                    })
-                    .then(base64Data => {
-                        return qz.printers.find("pos_printer").then(printer => {
-                            let config = qz.configs.create(printer);
-                            let data = [{ 
-                                type: 'raw', 
-                                format: 'command', 
-                                flavor: 'base64', // Fix: Tell QZ this is Base64 data
-                                data: base64Data
-                            }];
-                            return qz.print(config, data);
-                        });
-                    })
-                    .then(() => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Struk tercetak!',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        let msg = err.message ? err.message : err;
-                        if(msg.includes('Unable to establish connection')) {
-                            msg = "Aplikasi QZ Tray belum jalan! Buka dulu aplikasinya (Icon Hijau).";
-                        }
-                        if(msg.includes('printer')) {
-                            msg = "Printer 'pos_printer' tidak ditemukan. Cek ejaan nama printer di Windows.";
-                        }
-                        Swal.fire('Gagal Mencetak', msg, 'error');
-                    });
+                    
+                    // Open in new tab
+                    window.open(url, '_blank');
                 }
             </script>
         @endif

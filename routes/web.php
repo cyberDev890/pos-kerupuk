@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/payment/{transactionId}/history', 'history')->name('payment.history');
         Route::get('/payment/{transactionId}/print', 'printPaymentHistory')->name('payment.print');
         Route::get('/{customerId}/print-all', 'printCustomerFullHistory')->name('print-all');
+        Route::get('/payment/{transactionId}/print-raw', 'printRawPayment')->name('payment.print-raw');
     });
 
     // Hutang (Payables)
@@ -70,6 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('transaction')->name('transaction.')->group(function () {
              Route::get('/purchase/opening-balance', [\App\Http\Controllers\PurchaseController::class, 'openingBalance'])->name('purchase.opening-balance')->middleware('permission:transaction.purchase.create');
              Route::post('/purchase/opening-balance', [\App\Http\Controllers\PurchaseController::class, 'storeOpeningBalance'])->name('purchase.opening-balance.store')->middleware('permission:transaction.purchase.create');
+             Route::get('/purchase/{id}/print-raw', [\App\Http\Controllers\PurchaseController::class, 'printRawPurchase'])->name('purchase.print-raw')->middleware('permission:transaction.purchase.create');
              Route::resource('purchase', \App\Http\Controllers\PurchaseController::class)->middleware('permission:transaction.purchase.create,transaction.purchase.index');
              
              // Sales
@@ -78,7 +80,7 @@ Route::middleware('auth')->group(function () {
              Route::post('/sales', [TransactionController::class, 'store'])->name('sales.store');
              Route::get('/sales/{id}', [TransactionController::class, 'show'])->name('sales.show');
              Route::get('/sales/{id}/print', [TransactionController::class, 'print'])->name('sales.print');
-             Route::post('/sales/{id}/print-raw', [TransactionController::class, 'printRaw'])->name('sales.print-raw');
+             Route::get('/sales/{id}/print-raw', [TransactionController::class, 'printRaw'])->name('sales.print-raw');
              Route::get('/sales/{id}/invoice', [TransactionController::class, 'invoice'])->name('sales.invoice');
              Route::delete('/sales/{id}', [TransactionController::class, 'destroy'])->name('sales.destroy');
              
