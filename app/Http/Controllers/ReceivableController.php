@@ -136,12 +136,24 @@ class ReceivableController extends Controller
 
     public function storeOpeningBalance(Request $request)
     {
-        $request->validate([
+        // Strip currency formatting
+        if ($request->has('total_piutang')) {
+            $request->merge([
+                'total_piutang' => str_replace('.', '', $request->total_piutang)
+            ]);
+        }
+
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
             'tanggal' => 'required|date',
             'total_piutang' => 'required|numeric|min:1',
             'no_transaksi' => 'required|unique:transactions,no_transaksi',
         ]);
+
+        if ($validator->fails()) {
+            \Illuminate\Support\Facades\Log::error('Opening Balance Validation Failed', $validator->errors()->toArray());
+            return back()->withErrors($validator)->withInput();
+        }
 
         try {
             DB::beginTransaction();
@@ -168,7 +180,22 @@ class ReceivableController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+            \Illuminate\Support\Facades\Log::error('Opening Balance Exception: ' . $e->getMessage());
             return back()->with('error', 'Gagal menyimpan saldo awal: ' . $e->getMessage());
+        }
+    }
+
+    public function printRawPayment($id)
+    {
+        // $id is transaction_id
+        $transaction = \App\Models\Transaction::with(['customer', 'payments.user', 'details.product'])->findOrFail($id);
+
+        try {
+            // Browser Native Print: Return HTML View
+            return view('receivable.print_payment_thermal', compact('transaction'));
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => "Gagal memuat struk: " . $e->getMessage()], 500);
         }
     }
 }

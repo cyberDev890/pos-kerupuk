@@ -12,6 +12,15 @@
             <form action="{{ route('receivable.opening-balance.store') }}" method="POST" id="openingBalanceForm">
                 @csrf
                 <div class="card-body p-4">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-4">

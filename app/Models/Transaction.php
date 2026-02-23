@@ -35,8 +35,10 @@ class Transaction extends Model
     {
         parent::boot();
         self::creating(function ($model) {
-            $maxId = Transaction::withTrashed()->max('id') ?? 0;
-            $model->no_transaksi = 'TRX-' . date('Ymd') . '-' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT);
+            if (empty($model->no_transaksi)) {
+                $maxId = Transaction::withTrashed()->max('id') ?? 0;
+                $model->no_transaksi = 'TRX-' . date('Ymd') . '-' . str_pad($maxId + 1, 4, '0', STR_PAD_LEFT);
+            }
         });
     }
 }
