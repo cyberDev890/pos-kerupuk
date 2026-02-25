@@ -17,7 +17,7 @@
                     let showModal = {{ session('show_print_modal') ? 'true' : 'false' }};
 
                     if (showModal) {
-                        // Show Choice
+                        // Show Choice for Member
                         Swal.fire({
                             title: 'Transaksi Berhasil!',
                             text: "Ingin mencetak bukti pembayaran?",
@@ -39,16 +39,20 @@
                             }
                         });
                     } else {
-                        // Auto Print Thermal (Umum)
-                        printRaw(transactionId);
-                        
-                        // Optional: Show simple success toast or alert
+                        // For Umum: Ask before printing thermal to bypass popup blockers
                         Swal.fire({
+                            title: 'Transaksi Berhasil!',
+                            text: "Cetak Struk Thermal?",
                             icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Transaksi disimpan & Struk dicetak otomatis.',
-                            timer: 2000,
-                            showConfirmButton: false
+                            showCancelButton: true,
+                            confirmButtonText: '<i class="fas fa-print"></i> Ya, Cetak',
+                            cancelButtonText: 'Tutup',
+                            confirmButtonColor: '#28a745',
+                            cancelButtonColor: '#secondary'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                printRaw(transactionId);
+                            }
                         });
                     }
                 });
@@ -57,8 +61,7 @@
                     let url = "{{ route('transaction.sales.print-raw', ':id') }}";
                     url = url.replace(':id', id);
                     
-                    // Open in new tab
-                    window.open(url, '_blank');
+                    smartPrint(url);
                 }
             </script>
         @endif

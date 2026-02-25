@@ -33,7 +33,7 @@
         .items td { padding: 2px 0; vertical-align: top; }
     </style>
 </head>
-<body onload="window.print(); window.onafterprint = function(){ window.close(); }">
+<body onload="window.print();">
 
     <div class="text-center bold">
         STRUK PEMBELIAN<br>
@@ -85,10 +85,5 @@
 
     <div class="line"></div>
     <br>
-    
-    <script>
-        // Fallback auto-close
-        setTimeout(function() { window.close(); }, 3000); 
-    </script>
 </body>
 </html>

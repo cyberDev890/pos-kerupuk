@@ -212,8 +212,7 @@
         let url = "{{ route('transaction.sales.print-raw', ':id') }}";
         url = url.replace(':id', id);
         
-        // Open in new tab
-        window.open(url, '_blank');
+        smartPrint(url);
     }
     
     let currentTransactionId = null;

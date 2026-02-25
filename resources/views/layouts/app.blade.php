@@ -162,8 +162,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 $(this).val(value);
             });
         });
+
+        /**
+         * Smart Print Helper
+         * Detects Android/Tablet to use RawBT app, 
+         * or falls back to standard browser print/local bridge.
+         */
+        function smartPrint(printUrl) {
+            let isAndroid = /android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // If the URL is relative, make it absolute for RawBT
+                let absoluteUrl = new URL(printUrl, window.location.origin).href;
+                // Encode the URL and construct the RawBT intent
+                let encodedUrl = encodeURIComponent(absoluteUrl);
+                let rawbtUrl = "rawbt:" + encodedUrl;
+                
+                // Directly redirect to RawBT app
+                window.location.href = rawbtUrl;
+            } else {
+                // For desktop/laptop, open a new tab/popup for print preview
+                // Alternatively, here could be an AJAX call to the Local Bridge
+                let printWindow = window.open(printUrl, '_blank', 'width=400,height=600');
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    Swal.fire('Pop-up Diblokir!', 'Mohon izinkan pop-up untuk situs ini agar bisa mencetak struk.', 'warning');
+                }
+            }
+        }
     </script>
     @yield('scripts')
 </body>
+
 
 </html>

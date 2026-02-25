@@ -34,7 +34,7 @@
         .title { font-weight: bold; margin-bottom: 5px; display: block; }
     </style>
 </head>
-<body onload="window.print(); window.onafterprint = function(){ window.close(); }">
+<body onload="window.print();">
 
     <div class="text-center bold">
         PEMBAYARAN PIUTANG<br>
