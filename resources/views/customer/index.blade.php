@@ -10,49 +10,51 @@
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-sm table-bordered table-hover" id="table2">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Pelanggan</th>
-                        <th>Telepon</th>
-                        <th>Alamat</th>
-                        <th>Keterangan</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($customers as $index => $customer)
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-hover" id="table2">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $customer->nama }}</td>
-                            <td>{{ $customer->telepon }}</td>
-                            <td>{{ $customer->alamat }}</td>
-                            <td>{{ $customer->keterangan }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-warning mx-1 btn-edit" 
-                                        data-id="{{ $customer->id }}"
-                                        data-nama="{{ $customer->nama }}"
-                                        data-telepon="{{ $customer->telepon }}"
-                                        data-alamat="{{ $customer->alamat }}"
-                                        data-keterangan="{{ $customer->keterangan }}"
-                                        data-toggle="modal" data-target="#formCustomer">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <a href="{{ route('master-data.customer.show', $customer->id) }}" class="btn btn-info mx-1" title="Detail & Harga Khusus">
-                                        <i class="fas fa-tags"></i>
-                                    </a>
-                                    <a href="{{ route('master-data.customer.destroy', $customer->id) }}"
-                                        class="btn btn-danger mx-1" data-confirm-delete="true">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
+                            <th>No</th>
+                            <th>Nama Pelanggan</th>
+                            <th>Telepon</th>
+                            <th>Alamat</th>
+                            <th>Keterangan</th>
+                            <th>Opsi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($customers as $index => $customer)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $customer->nama }}</td>
+                                <td>{{ $customer->telepon }}</td>
+                                <td>{{ $customer->alamat }}</td>
+                                <td>{{ $customer->keterangan }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-warning mx-1 btn-edit" 
+                                            data-id="{{ $customer->id }}"
+                                            data-nama="{{ $customer->nama }}"
+                                            data-telepon="{{ $customer->telepon }}"
+                                            data-alamat="{{ $customer->alamat }}"
+                                            data-keterangan="{{ $customer->keterangan }}"
+                                            data-toggle="modal" data-target="#formCustomer">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <a href="{{ route('master-data.customer.show', $customer->id) }}" class="btn btn-info mx-1" title="Detail & Harga Khusus">
+                                            <i class="fas fa-tags"></i>
+                                        </a>
+                                        <a href="{{ route('master-data.customer.destroy', $customer->id) }}"
+                                            class="btn btn-danger mx-1" data-confirm-delete="true">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

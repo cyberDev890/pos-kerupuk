@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-md-2">
                             <label class="text-muted small uppercase font-weight-bold">Jumlah</label>
-                            <input type="number" id="qtyInput" class="form-control text-center font-weight-bold" value="1" min="1">
+                            <input type="number" id="qtyInput" class="form-control text-center font-weight-bold" value="1" min="1" inputmode="numeric">
                         </div>
                         <div class="col-md-3">
                             <label id="labelHarga" class="text-muted small uppercase font-weight-bold text-truncate">Harga Beli</label>
@@ -79,7 +79,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text font-weight-bold text-sm">Rp</span>
                                 </div>
-                                <input type="text" id="priceInput" class="form-control currency-input font-weight-bold" value="0">
+                                <input type="text" id="priceInput" class="form-control currency-input font-weight-bold" value="0" inputmode="numeric">
                             </div>
                         </div>
                         <div class="col-md-1">
@@ -140,7 +140,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text bg-white border-right-0 font-weight-bold">Rp</span>
                                     </div>
-                                    <input type="text" name="bayar" id="inputBayar" class="form-control border-left-0 font-weight-bold currency-input" placeholder="0">
+                                    <input type="text" name="bayar" id="inputBayar" class="form-control border-left-0 font-weight-bold currency-input" placeholder="0" inputmode="numeric">
                                 </div>
                             </div>
                             

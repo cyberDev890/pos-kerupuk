@@ -10,46 +10,48 @@
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-sm table-bordered table-hover" id="table2">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Suplier</th>
-                        <th>Telepon</th>
-                        <th>Alamat</th>
-                        <th>Keterangan</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($suppliers as $index => $supplier)
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-hover" id="table2">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $supplier->nama }}</td>
-                            <td>{{ $supplier->telepon }}</td>
-                            <td>{{ $supplier->alamat }}</td>
-                            <td>{{ $supplier->keterangan }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-warning mx-1 btn-edit" 
-                                        data-id="{{ $supplier->id }}"
-                                        data-nama="{{ $supplier->nama }}"
-                                        data-telepon="{{ $supplier->telepon }}"
-                                        data-alamat="{{ $supplier->alamat }}"
-                                        data-keterangan="{{ $supplier->keterangan }}"
-                                        data-toggle="modal" data-target="#formSupplier">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <a href="{{ route('master-data.supplier.destroy', $supplier->id) }}"
-                                        class="btn btn-danger mx-1" data-confirm-delete="true">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
+                            <th>No</th>
+                            <th>Nama Suplier</th>
+                            <th>Telepon</th>
+                            <th>Alamat</th>
+                            <th>Keterangan</th>
+                            <th>Opsi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($suppliers as $index => $supplier)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $supplier->nama }}</td>
+                                <td>{{ $supplier->telepon }}</td>
+                                <td>{{ $supplier->alamat }}</td>
+                                <td>{{ $supplier->keterangan }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-warning mx-1 btn-edit" 
+                                            data-id="{{ $supplier->id }}"
+                                            data-nama="{{ $supplier->nama }}"
+                                            data-telepon="{{ $supplier->telepon }}"
+                                            data-alamat="{{ $supplier->alamat }}"
+                                            data-keterangan="{{ $supplier->keterangan }}"
+                                            data-toggle="modal" data-target="#formSupplier">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <a href="{{ route('master-data.supplier.destroy', $supplier->id) }}"
+                                            class="btn btn-danger mx-1" data-confirm-delete="true">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

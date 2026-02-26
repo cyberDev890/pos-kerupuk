@@ -16,43 +16,45 @@
         <x-alert :type="'success'" :errors="session('success')" />
         <x-alert :type="'danger'" :errors="session('error')" />
 
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Tanggal</th>
-                    <th>Produk</th>
-                    <th>Jumlah</th>
-                    <th>Dari -> Ke</th>
-                    <th>User</th>
-                    <th>Catatan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($mutations as $index => $mutation)
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>{{ $mutations->firstItem() + $index }}</td>
-                        <td>{{ $mutation->created_at->format('d/m/Y H:i') }}</td>
-                        <td>{{ $mutation->product->nama_produk ?? '-' }}</td>
-                        <td>
-                            {{ $mutation->unit_info }}
-                            <small class="text-muted d-block">({{ number_format($mutation->amount) }} Pcs)</small>
-                        </td>
-                        <td>
-                            <span class="badge badge-info">{{ ucfirst($mutation->source) }}</span>
-                            <i class="fas fa-arrow-right mx-1"></i>
-                            <span class="badge badge-success">{{ ucfirst($mutation->destination) }}</span>
-                        </td>
-                        <td>{{ $mutation->user->name ?? '-' }}</td>
-                        <td>{{ $mutation->notes }}</td>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Produk</th>
+                        <th>Jumlah</th>
+                        <th>Dari -> Ke</th>
+                        <th>User</th>
+                        <th>Catatan</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center">Belum ada data mutasi.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse ($mutations as $index => $mutation)
+                        <tr>
+                            <td>{{ $mutations->firstItem() + $index }}</td>
+                            <td>{{ $mutation->created_at->format('d/m/Y H:i') }}</td>
+                            <td>{{ $mutation->product->nama_produk ?? '-' }}</td>
+                            <td>
+                                {{ $mutation->unit_info }}
+                                <small class="text-muted d-block">({{ number_format($mutation->amount) }} Pcs)</small>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">{{ ucfirst($mutation->source) }}</span>
+                                <i class="fas fa-arrow-right mx-1"></i>
+                                <span class="badge badge-success">{{ ucfirst($mutation->destination) }}</span>
+                            </td>
+                            <td>{{ $mutation->user->name ?? '-' }}</td>
+                            <td>{{ $mutation->notes }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">Belum ada data mutasi.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
         
         <div class="mt-3">
             {{ $mutations->links() }}
