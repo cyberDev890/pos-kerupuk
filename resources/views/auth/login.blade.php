@@ -18,32 +18,54 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 9999;
             display: none;
             align-items: center;
             justify-content: center;
             flex-direction: column;
         }
-        .spinner-container {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+        .modern-loader {
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
+            position: relative;
+            animation: rotate_loader 1.2s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .modern-loader::before, .modern-loader::after {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 5px solid #007bff;
+            animation: prixRetriever 2s linear infinite;
+        }
+        .modern-loader::after {
+            border-color: #ff3d00;
+            animation: prixRetriever 2s linear infinite, rotate_loader 0.5s linear infinite reverse;
+            inset: 6px;
+        }
+        @keyframes rotate_loader {
+            0% { transform: rotate(0deg) }
+            100% { transform: rotate(360deg) }
+        }
+        @keyframes prixRetriever {
+            0% { clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0) }
+            25% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0) }
+            50% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%) }
+            75% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%) }
+            100% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0) }
         }
     </style>
 </head>
 
 <body class="hold-transition login-page">
     <div id="global-loader">
-        <div class="spinner-container"></div>
-        <div class="loading-text mt-3 font-weight-bold">Mohon Tunggu...</div>
+        <div class="modern-loader"></div>
+        <div class="loading-text mt-4 font-weight-bold" style="color: #222; text-shadow: 0 0 10px white;">Sedang Memproses...</div>
     </div>
     <div class="login-box">
         <div class="card card-outline card-primary">
