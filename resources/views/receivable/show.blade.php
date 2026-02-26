@@ -28,7 +28,7 @@
                 </a>
             </div>
             <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>No Transaksi</th>
@@ -144,19 +144,21 @@
                 </button>
             </div>
             <div class="modal-body p-0">
-                <table class="table table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Jumlah</th>
-                            <th>Penerima</th>
-                            <th>Catatan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="histBody">
-                        <!-- Loaded via Ajax -->
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jumlah</th>
+                                <th>Penerima</th>
+                                <th>Catatan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="histBody">
+                            <!-- Loaded via Ajax -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

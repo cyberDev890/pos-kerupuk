@@ -129,13 +129,13 @@
                 
                 <!-- Hidden Detail Area for Selected Product -->
                 <div class="col-md-12 mt-3" id="productDetail" style="display: none;">
-                    <div class="card bg-light border mb-0">
-                        <div class="card-body py-2">
+                    <div class="card bg-light border mb-0 shadow-sm">
+                        <div class="card-body py-3">
                              <div class="row align-items-center">
-                                <div class="col-md-4">
+                                <div class="col-lg-4 col-md-6 mb-2 mb-lg-0">
                                      <strong id="detailNama" class="h5">Nama Produk</strong>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-lg-3 col-md-6 mb-3 mb-lg-0 text-md-right text-lg-left">
                                     <div class="mb-2">
                                         <small class="text-muted d-block">Stok Tersedia:</small>
                                         <span id="stockDisplay" class="font-weight-bold text-primary">-</span>
@@ -151,19 +151,19 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                     <div class="input-group input-group-sm">
+                                <div class="col-lg-3 col-md-6 mb-2 mb-lg-0">
+                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <button type="button" class="btn btn-danger" onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
                                         </div>
-                                        <input type="number" id="qtyInput" class="form-control text-center" value="1" min="1">
+                                        <input type="number" id="qtyInput" class="form-control text-center font-weight-bold" value="1" min="1">
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-success" onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                     <button type="button" id="btnAddCart" class="btn btn-success btn-sm btn-block">
+                                <div class="col-lg-2 col-md-6">
+                                     <button type="button" id="btnAddCart" class="btn btn-success btn-lg btn-block shadow-sm">
                                         <i class="fas fa-plus"></i> Tambah
                                      </button>
                                 </div>
@@ -212,7 +212,7 @@
         </div>
         <div class="card-body">
              <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
                      <table class="table table-sm table-borderless">
                          <tr>
                              <th>Total Belanja</th>
@@ -236,18 +236,18 @@
                              </tr>
                          </table>
                     </div>
-                    <div class="col-md-6">
-                         <div class="card bg-light border">
+                    <div class="col-lg-6 col-md-12">
+                         <div class="card bg-light border shadow-sm">
                              <div class="card-body p-3">
-                                 <div class="form-group">
-                                     <label>Bayar (Rp)</label>
-                                     <input type="text" name="bayar" id="inputBayar" class="form-control form-control-lg currency-input" placeholder="0">
-                                </div>
-                             <div class="d-flex justify-content-between mb-3">
-                                <span>Kembalian:</span>
-                                <span class="h5 font-weight-bold text-success" id="kembalianDisplay">Rp 0</span>
+                                 <div class="form-group mb-4">
+                                     <label class="h5">Bayar (Rp)</label>
+                                     <input type="text" name="bayar" id="inputBayar" class="form-control form-control-lg currency-input text-right font-weight-bold p-4" style="font-size: 2rem;" placeholder="0">
+                                 </div>
+                             <div class="d-flex justify-content-between mb-4">
+                                <span class="h5">Kembalian:</span>
+                                <span class="h4 font-weight-bold text-success" id="kembalianDisplay">Rp 0</span>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnCheckout" disabled>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block py-3 shadow" id="btnCheckout" disabled>
                                 <i class="fas fa-save"></i> Proses Transaksi
                             </button>
                          </div>

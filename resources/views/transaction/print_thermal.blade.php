@@ -102,7 +102,6 @@
     <div class="line"></div>
     <div class="text-center">
         Terima Kasih<br>
-        <small>Barang yang sudah dibeli tidak dapat ditukar/dikembalikan</small>
     </div>
     <br>
     

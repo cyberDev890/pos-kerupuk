@@ -127,111 +127,119 @@
     <div class="card-body">
         <div class="tab-content" id="custom-tabsContent">
             <div class="tab-pane fade show active" id="tab-trx" role="tabpanel" aria-labelledby="tab-trx-tab">
-                <table id="tableTrx" class="table table-bordered table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>No Transaksi</th>
-                            <th>Pelanggan</th>
-                            <th>Total Belanja</th>
-                            <th>Biaya Lain</th>
-                            <th>Total Bersih</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($transactions as $trx)
-                        <tr>
-                            <td>{{ date('d-m-Y', strtotime($trx->tanggal)) }}</td>
-                            <td>{{ $trx->no_transaksi }}</td>
-                            <td>{{ $trx->customer->nama ?? 'Umum' }}</td>
-                            <td>Rp {{ number_format($trx->total_harga, 0, ',', '.') }}</td>
-                            <td>Rp {{ number_format($trx->biaya_kirim + $trx->biaya_tambahan, 0, ',', '.') }}</td>
-                            <td>Rp {{ number_format($trx->total_harga - $trx->biaya_kirim - $trx->biaya_tambahan, 0, ',', '.') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="tableTrx" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No Transaksi</th>
+                                <th>Pelanggan</th>
+                                <th>Total Belanja</th>
+                                <th>Biaya Lain</th>
+                                <th>Total Bersih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($transactions as $trx)
+                            <tr>
+                                <td>{{ date('d-m-Y', strtotime($trx->tanggal)) }}</td>
+                                <td>{{ $trx->no_transaksi }}</td>
+                                <td>{{ $trx->customer->nama ?? 'Umum' }}</td>
+                                <td>Rp {{ number_format($trx->total_harga, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($trx->biaya_kirim + $trx->biaya_tambahan, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($trx->total_harga - $trx->biaya_kirim - $trx->biaya_tambahan, 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="tab-pane fade" id="tab-retur" role="tabpanel" aria-labelledby="tab-retur-tab">
-                <table id="tableRetur" class="table table-bordered table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>No Retur</th>
-                            <th>Pelanggan</th>
-                            <th>Transaksi Asal</th>
-                            <th>Item</th>
-                            <th>Total Refund</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($returns as $ret)
-                        <tr>
-                            <td>{{ date('d-m-Y', strtotime($ret->tanggal)) }}</td>
-                            <td>{{ $ret->no_retur ?? '-' }}</td>
-                            <td>{{ $ret->customer->nama ?? 'Umum' }}</td>
-                            <td>{{ $ret->transaction->no_transaksi ?? '-' }}</td>
-                            <td>
-                                <ul class="pl-3 mb-0">
-                                @foreach($ret->details as $detail)
-                                    <li>
-                                        {{ optional($detail->product)->nama_produk ?? 'Item Terhapus' }} 
-                                        ({{ $detail->jumlah }} {{ optional($detail->unit)->nama_satuan ?? '' }})
-                                    </li>
-                                @endforeach
-                                </ul>
-                            </td>
-                            <td>Rp {{ number_format($ret->total_harga, 0, ',', '.') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="tableRetur" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>No Retur</th>
+                                <th>Pelanggan</th>
+                                <th>Transaksi Asal</th>
+                                <th>Item</th>
+                                <th>Total Refund</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($returns as $ret)
+                            <tr>
+                                <td>{{ date('d-m-Y', strtotime($ret->tanggal)) }}</td>
+                                <td>{{ $ret->no_retur ?? '-' }}</td>
+                                <td>{{ $ret->customer->nama ?? 'Umum' }}</td>
+                                <td>{{ $ret->transaction->no_transaksi ?? '-' }}</td>
+                                <td>
+                                    <ul class="pl-3 mb-0">
+                                    @foreach($ret->details as $detail)
+                                        <li>
+                                            {{ optional($detail->product)->nama_produk ?? 'Item Terhapus' }} 
+                                            ({{ $detail->jumlah }} {{ optional($detail->unit)->nama_satuan ?? '' }})
+                                        </li>
+                                    @endforeach
+                                    </ul>
+                                </td>
+                                <td>Rp {{ number_format($ret->total_harga, 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             <!-- Salary Tab -->
             <div class="tab-pane fade" id="tab-gaji" role="tabpanel" aria-labelledby="tab-gaji-tab">
-                <table id="tableGaji" class="table table-bordered table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Nama Karyawan</th>
-                            <th>Keterangan</th>
-                            <th>Nominal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($salaries as $salary)
-                        <tr>
-                            <td>{{ date('d-m-Y', strtotime($salary->date)) }}</td>
-                            <td>{{ $salary->name }}</td>
-                            <td>{{ $salary->description }}</td>
-                            <td>Rp {{ number_format($salary->amount, 0, ',', '.') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="tableGaji" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Nama Karyawan</th>
+                                <th>Keterangan</th>
+                                <th>Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($salaries as $salary)
+                            <tr>
+                                <td>{{ date('d-m-Y', strtotime($salary->date)) }}</td>
+                                <td>{{ $salary->name }}</td>
+                                <td>{{ $salary->description }}</td>
+                                <td>Rp {{ number_format($salary->amount, 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Operational Cost Tab -->
             <div class="tab-pane fade" id="tab-operasional" role="tabpanel" aria-labelledby="tab-operasional-tab">
-                <table id="tableOperasional" class="table table-bordered table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Keterangan</th>
-                            <th>Nominal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($operationalCosts as $cost)
-                        <tr>
-                            <td>{{ date('d-m-Y', strtotime($cost->date)) }}</td>
-                            <td>{{ $cost->description }}</td>
-                            <td>Rp {{ number_format($cost->amount, 0, ',', '.') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table id="tableOperasional" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Keterangan</th>
+                                <th>Nominal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($operationalCosts as $cost)
+                            <tr>
+                                <td>{{ date('d-m-Y', strtotime($cost->date)) }}</td>
+                                <td>{{ $cost->description }}</td>
+                                <td>Rp {{ number_format($cost->amount, 0, ',', '.') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
