@@ -31,10 +31,49 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta name="apple-mobile-web-app-title" content="POS">
     <link rel="apple-touch-icon" href="/icons/icon-192.png">
 
+    <style>
+        /* Global Loading Spinner */
+        #global-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .spinner-container {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+        }
+    </style>
+
     @yield('styles')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+    <div id="global-loader">
+        <div class="spinner-container"></div>
+        <div class="loading-text">Mohon Tunggu...</div>
+    </div>
     @include('sweetalert::alert')
     <div class="wrapper">
 
@@ -144,6 +183,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('adminlte') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
     <script>
         $(function() {
+            // Show loader on form submission
+            $('form').on('submit', function() {
+                // Check if the form is valid (for simple validations)
+                if (this.checkValidity()) {
+                    $('#global-loader').css('display', 'flex');
+                }
+            });
+
+            // Show loader on menu clicks/navigation
+            $('a.nav-link, a.btn').on('click', function(e) {
+                let href = $(this).attr('href');
+                let target = $(this).attr('target');
+                
+                // Only show if it's a real navigation to another internal page
+                if (href && href !== '#' && !href.startsWith('javascript:') && !target) {
+                    $('#global-loader').css('display', 'flex');
+                }
+            });
+
+            // Global AJAX Loader
+            $(document).ajaxStart(function() {
+                $('#global-loader').css('display', 'flex');
+            }).ajaxStop(function() {
+                $('#global-loader').hide();
+            });
+
             $("#table1").DataTable({
                 "responsive": true,
                 "lengthChange": true,
@@ -202,7 +267,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     </script>
     @yield('scripts')
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.log('Service Worker registration failed', err));
+            });
+        }
+    </script>
 </body>
-
 
 </html>
