@@ -156,7 +156,7 @@
                                         <div class="input-group-prepend">
                                             <button type="button" class="btn btn-danger" onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
                                         </div>
-                                        <input type="number" id="qtyInput" class="form-control text-center font-weight-bold" value="1" min="1">
+                                        <input type="number" id="qtyInput" class="form-control text-center font-weight-bold" value="1" min="1" inputmode="numeric">
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-success" onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
                                         </div>
@@ -221,13 +221,13 @@
                              <tr>
                                  <th class="align-middle">Biaya Kirim</th>
                                  <td>
-                                     <input type="text" name="biaya_kirim" id="inputBiayaKirim" class="form-control form-control-sm text-right fee-input currency-input" value="0" disabled placeholder="0">
+                                     <input type="text" name="biaya_kirim" id="inputBiayaKirim" class="form-control form-control-sm text-right fee-input currency-input" value="0" disabled placeholder="0" inputmode="numeric">
                                  </td>
                              </tr>
                              <tr>
                                  <th class="align-middle">Biaya Tambahan</th>
                                  <td>
-                                     <input type="text" name="biaya_tambahan" id="inputBiayaTambahan" class="form-control form-control-sm text-right fee-input currency-input" value="0" disabled placeholder="0">
+                                     <input type="text" name="biaya_tambahan" id="inputBiayaTambahan" class="form-control form-control-sm text-right fee-input currency-input" value="0" disabled placeholder="0" inputmode="numeric">
                                  </td>
                              </tr>
                              <tr class="bg-light border-top">
@@ -241,7 +241,7 @@
                              <div class="card-body p-3">
                                  <div class="form-group mb-4">
                                      <label class="h5">Bayar (Rp)</label>
-                                     <input type="text" name="bayar" id="inputBayar" class="form-control form-control-lg currency-input text-right font-weight-bold p-4" style="font-size: 2rem;" placeholder="0">
+                                     <input type="text" name="bayar" id="inputBayar" class="form-control form-control-lg currency-input text-right font-weight-bold p-4" style="font-size: 2rem;" placeholder="0" inputmode="numeric">
                                  </div>
                              <div class="d-flex justify-content-between mb-4">
                                 <span class="h5">Kembalian:</span>

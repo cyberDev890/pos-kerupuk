@@ -62,7 +62,7 @@
                                                 <div class="form-group">
                                                     <label>Nominal</label>
                                                     <input type="text" name="amount" class="form-control currency-input"
-                                                        value="{{ number_format($cost->amount, 0, ',', '.') }}" required>
+                                                        value="{{ number_format($cost->amount, 0, ',', '.') }}" required inputmode="numeric">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Tanggal</label>
@@ -108,7 +108,7 @@
                         </div>
                         <div class="form-group">
                             <label>Nominal</label>
-                            <input type="text" name="amount" class="form-control currency-input" required>
+                            <input type="text" name="amount" class="form-control currency-input" required inputmode="numeric">
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>

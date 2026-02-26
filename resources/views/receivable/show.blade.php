@@ -114,7 +114,7 @@
                         <div class="col-md-6">
                              <div class="form-group">
                                 <label>Jumlah Bayar (Rp)</label>
-                                <input type="text" name="amount" class="form-control currency-input" id="payAmount" required placeholder="0">
+                                <input type="text" name="amount" class="form-control currency-input" id="payAmount" required placeholder="0" inputmode="numeric">
                             </div>
                         </div>
                     </div>
