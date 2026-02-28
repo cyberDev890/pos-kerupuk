@@ -341,6 +341,7 @@
         $('form').on('submit', function(e) {
             if (cart.length === 0) {
                 e.preventDefault();
+                $('#global-loader').hide();
                 Swal.fire('Kosong!', 'Mohon tambahkan setidaknya 1 produk.', 'error');
                 return;
             }

@@ -612,6 +612,7 @@
             
             if(bayar < grandTotal) {
                 e.preventDefault();
+                $('#global-loader').hide();
                 
                 if(!customerId) {
                     Swal.fire({
@@ -635,6 +636,7 @@
                     confirmButtonText: 'Ya, Simpan Piutang!'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        $('#global-loader').css('display', 'flex');
                         // Unbind submit to prevent loop and submit programmatically
                         e.currentTarget.submit();
                     }
