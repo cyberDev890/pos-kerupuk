@@ -99,11 +99,13 @@
             padding: 12px;
             border-bottom: 1px solid #eee;
         }
-        table.items .total-col {
+        table.items .total-col, table.items .price-col {
             text-align: right;
+            width: 20%;
         }
         table.items .qty-col {
             text-align: center;
+            width: 10%;
         }
         
         .summary-section {
@@ -306,8 +308,8 @@
         <table class="items">
             <thead>
                 <tr>
-                    <th style="width: 45%">Keterangan</th>
-                    <th>Harga</th>
+                    <th style="width: 50%">Keterangan</th>
+                    <th class="price-col">Harga</th>
                     <th class="qty-col">Jml</th>
                     <th class="total-col">Total</th>
                 </tr>
@@ -321,7 +323,7 @@
                             <div style="font-size: 11px; color: #777; margin-top: 2px;">{{ $detail->unit_info }}</div>
                         @endif
                     </td>
-                    <td style="text-align: right;">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                    <td class="price-col">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
                     <td class="qty-col">{{ (float)$detail->jumlah }}</td>
                     <td class="total-col">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
                 </tr>
