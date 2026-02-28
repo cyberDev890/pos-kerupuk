@@ -103,7 +103,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary float-right" id="btnSimpan">Simpan Perubahan</button>
+                <button type="submit" class="btn btn-primary float-right" id="btnSimpan" onclick="if($('.is-invalid').length > 0) { event.preventDefault(); $('#global-loader').hide(); Swal.fire('Error', 'Terdapat harga di bawah modal!', 'error'); } else { $('#global-loader').css('display', 'flex'); }">Simpan Perubahan</button>
             </div>
         </form>
     </div>
