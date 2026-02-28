@@ -258,15 +258,15 @@
 </head>
 <body onload="/* Auto print disabled to promote Ctrl+Shift+P */">
 
-    <div class="print-actions no-print" style="position: static; margin-bottom: 20px;">
-        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 2px solid #ffeeba; text-align: center; max-width: 600px; margin: 20px auto;">
-            <h2 style="color: #856404; margin-bottom: 10px;">PANDUAN CETAK (PRINT)</h2>
-            <p style="font-size: 16px; margin-bottom: 15px;">Tekan tombol berikut pada keyboard Anda secara bersamaan untuk hasil cetak terbaik:</p>
-            <div style="font-size: 24px; font-weight: bold; background: #fff; padding: 15px; border-radius: 5px; display: inline-block; border: 1px solid #ddd; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                Ctrl + Shift + P
-            </div>
-            <p style="margin-top: 15px; color: #666; font-size: 13px;">(Akan membuka dialog printer Windows. Pilih **Nota Besar** di Printing Preferences agar pas dengan kertas)</p>
-        </div>
+    <div class="print-actions no-print" style="position: fixed; top: 20px; right: 20px;">
+        <button onclick="window.print()" class="btn-print btn-print-system">
+            <svg style="width:16px;height:16px;vertical-align:middle;margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print Preview
+        </button>
     </div>
 
     <div class="invoice-box">
@@ -306,8 +306,7 @@
         <table class="items">
             <thead>
                 <tr>
-                    <th style="width: 40%">Keterangan</th>
-                    <th class="qty-col">Satuan</th>
+                    <th style="width: 45%">Keterangan</th>
                     <th>Harga</th>
                     <th class="qty-col">Jml</th>
                     <th class="total-col">Total</th>
@@ -322,7 +321,6 @@
                             <div style="font-size: 11px; color: #777; margin-top: 2px;">{{ $detail->unit_info }}</div>
                         @endif
                     </td>
-                    <td class="qty-col">{{ $detail->unit->satuan_kecil ?? 'Pcs' }}</td>
                     <td style="text-align: right;">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
                     <td class="qty-col">{{ (float)$detail->jumlah }}</td>
                     <td class="total-col">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
