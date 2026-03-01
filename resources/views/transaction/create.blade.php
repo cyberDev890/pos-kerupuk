@@ -141,12 +141,12 @@
                                         <span id="stockDisplay" class="font-weight-bold text-primary">-</span>
                                     </div>
                                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-primary active btn-sm" id="btnSatuanKecil">
-                                            <input type="radio" name="options" id="optKecil" autocomplete="off" checked> 
+                                        <label class="btn btn-outline-primary btn-sm" id="btnSatuanKecil">
+                                            <input type="radio" name="options" id="optKecil" autocomplete="off"> 
                                             <span id="labelKecil">Pcs</span> (<span id="priceKecil">0</span>)
                                         </label>
-                                        <label class="btn btn-outline-primary btn-sm" id="btnSatuanBesar">
-                                            <input type="radio" name="options" id="optBesar" autocomplete="off"> 
+                                        <label class="btn btn-outline-primary active btn-sm" id="btnSatuanBesar">
+                                            <input type="radio" name="options" id="optBesar" autocomplete="off" checked> 
                                             <span id="labelBesar">Bal</span> (<span id="priceBesar">0</span>)
                                         </label>
                                     </div>
@@ -282,7 +282,7 @@
         let grandTotal = 0;
         
         let currentProduct = null;
-        let selectedUnitType = 'kecil'; 
+        let selectedUnitType = 'besar'; 
 
         let customerPrices = {}; // { productId: { khusus_kecil: 1000, khusus_besar: 2000 } }
 
@@ -383,7 +383,7 @@
                 $('#priceBesar').text(formatRupiah(hargaBesar));
 
                 // Default selection
-                setUnitType('kecil');
+                setUnitType('besar');
                 $('#qtyInput').val(1);
                 $('#productDetail').slideDown();
             } else {
