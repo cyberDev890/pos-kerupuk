@@ -228,8 +228,14 @@ class TransactionController extends Controller
                              }
                          }
                          
-                         // Tolerance for float comparison (500 perak)
-                         if (abs($detail->harga_satuan - $priceBesar) < 500) { 
+                         // Check by string matching unit_info if available (More Robust!)
+                         $isBesarByInfo = false;
+                         if (!empty($detail->unit_info) && stripos($detail->unit_info, 'Bal') !== false) {
+                             $isBesarByInfo = true;
+                         }
+
+                         // Tolerance for float comparison (500 perak) OR explicit info string match
+                         if ($isBesarByInfo || abs($detail->harga_satuan - $priceBesar) < 500) { 
                              // It matches Big Price logic
                              $qtyToRestore = $detail->jumlah * $unit->isi;
                          }
