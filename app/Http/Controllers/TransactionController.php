@@ -218,6 +218,16 @@ class TransactionController extends Controller
                          // Check if the stored price is closer to Large Price
                          $priceBesar = $product->harga_jual_besar ?? ($product->harga_jual * $unit->isi);
                          
+                         if ($transaction->customer_id) {
+                             $customerPrice = \App\Models\CustomerPrice::where('customer_id', $transaction->customer_id)
+                                 ->where('product_id', $product->id)
+                                 ->first();
+                                 
+                             if ($customerPrice && $customerPrice->khusus_besar > 0) {
+                                 $priceBesar = $customerPrice->khusus_besar;
+                             }
+                         }
+                         
                          // Tolerance for float comparison (500 perak)
                          if (abs($detail->harga_satuan - $priceBesar) < 500) { 
                              // It matches Big Price logic
