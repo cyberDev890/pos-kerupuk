@@ -220,7 +220,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 let target = $(this).attr('target');
                 
                 // Only show if it's a real navigation to another internal page
-                if (href && href !== '#' && !href.startsWith('javascript:') && !target) {
+                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !target) {
                     $('#global-loader').css('display', 'flex');
                 }
             });
