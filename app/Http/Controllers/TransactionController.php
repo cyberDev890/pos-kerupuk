@@ -79,6 +79,7 @@ class TransactionController extends Controller
                     'jumlah' => $item['jumlah'],
                     'harga_satuan' => $harga_satuan,
                     'subtotal' => $subtotal,
+                    'hpp' => $product->harga_beli,
                     'isi' => $item['conversion'] ?? 1, 
                     'unit_type' => $item['unit_type'] ?? 'kecil',
                     'unit_info' => $unitInfo
@@ -143,6 +144,9 @@ class TransactionController extends Controller
                     'jumlah' => $item['jumlah'],
                     'harga_satuan' => $item['harga_satuan'],
                     'subtotal' => $item['subtotal'],
+                    'hpp' => $item['hpp'],
+                    'conversion' => $item['isi'],
+                    'unit_type' => $item['unit_type'],
                     'unit_info' => $item['unit_info'],
                 ]);
 

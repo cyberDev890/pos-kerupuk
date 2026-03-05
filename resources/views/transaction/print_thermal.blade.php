@@ -84,8 +84,24 @@
 
     <table style="width: 100%">
         <tr>
-            <td class="text-right">Total :</td>
-            <td class="text-right">{{ number_format($transaction->total_harga, 0, ',', '.') }}</td>
+            <td class="text-right">Subtotal :</td>
+            <td class="text-right">{{ number_format($transaction->subtotal, 0, ',', '.') }}</td>
+        </tr>
+        @if($transaction->biaya_kirim > 0)
+        <tr>
+            <td class="text-right">Biaya Kirim :</td>
+            <td class="text-right">{{ number_format($transaction->biaya_kirim, 0, ',', '.') }}</td>
+        </tr>
+        @endif
+        @if($transaction->biaya_tambahan > 0)
+        <tr>
+            <td class="text-right">Biaya Tambahan :</td>
+            <td class="text-right">{{ number_format($transaction->biaya_tambahan, 0, ',', '.') }}</td>
+        </tr>
+        @endif
+        <tr>
+            <td class="text-right bold">Total :</td>
+            <td class="text-right bold">{{ number_format($transaction->total_harga, 0, ',', '.') }}</td>
         </tr>
         @if($transaction->bayar > 0)
         <tr>

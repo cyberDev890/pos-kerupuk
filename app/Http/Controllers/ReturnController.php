@@ -187,6 +187,7 @@ class ReturnController extends Controller
                     'jumlah' => $qty,
                     'harga_satuan' => $harga_satuan,
                     'subtotal' => $subtotal,
+                    'hpp' => $product->harga_beli,
                     'unit_info' => $item['unit_info'] ?? null,
                     'conversion' => $conversion,
                     'unit_type' => $item['unit_type'] ?? null,
@@ -222,6 +223,7 @@ class ReturnController extends Controller
                     'jumlah' => $item['jumlah'],
                     'harga_satuan' => $item['harga_satuan'],
                     'subtotal' => $item['subtotal'],
+                    'hpp' => $item['hpp'],
                     'unit_info' => $item['unit_info'],
                     'conversion' => $item['conversion'], // Store strictly
                     'unit_type' => $item['unit_type'],

@@ -83,6 +83,12 @@ class ReportController extends Controller
 
     private function calculateTransactionDetailCOGS($detail)
     {
+        // 1. Use Persisted Historical Data (Stable Reporting)
+        if ($detail->hpp !== null && $detail->conversion !== null) {
+            return $detail->jumlah * $detail->conversion * $detail->hpp;
+        }
+
+        // 2. Fallback to Heuristic (Legacy Data)
         if (!$detail->product) return 0;
         
         $product = $detail->product;
@@ -125,6 +131,11 @@ class ReportController extends Controller
 
     private function calculateReturnDetailCOGS($detail)
     {
+         // 1. Use Persisted Historical HPP
+         if ($detail->hpp !== null) {
+              return $detail->jumlah * ($detail->conversion ?? 1) * $detail->hpp;
+         }
+
          if (!$detail->product) return 0;
 
          // Use stored conversion if available (from recent migration)

@@ -344,7 +344,7 @@
                 <table class="totals-table">
                     <tr>
                         <td>SUB TOTAL</td>
-                        <td>Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($transaction->subtotal, 0, ',', '.') }}</td>
                     </tr>
                     @if($transaction->biaya_kirim > 0)
                     <tr>

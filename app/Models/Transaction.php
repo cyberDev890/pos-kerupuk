@@ -11,6 +11,18 @@ class Transaction extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    protected $appends = ['subtotal', 'grand_total'];
+
+    public function getSubtotalAttribute()
+    {
+        return $this->details->sum('subtotal');
+    }
+
+    public function getGrandTotalAttribute()
+    {
+        return $this->total_harga;
+    }
+
     public function details()
     {
         return $this->hasMany(TransactionDetail::class);

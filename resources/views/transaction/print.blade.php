@@ -94,8 +94,8 @@
         
         <table>
             <tr>
-                <td>Total</td>
-                <td class="text-right bold">{{ number_format($transaction->total_harga, 0, ',', '.') }}</td>
+                <td>Subtotal</td>
+                <td class="text-right bold">{{ number_format($transaction->subtotal, 0, ',', '.') }}</td>
             </tr>
             @if($transaction->biaya_kirim > 0)
             <tr>
