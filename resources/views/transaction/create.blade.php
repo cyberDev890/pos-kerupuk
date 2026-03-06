@@ -469,7 +469,8 @@
                 unit_type: selectedUnitType,
                 jumlah: qty,
                 harga_satuan: price,
-                subtotal: itemSubtotal
+                subtotal: itemSubtotal,
+                isi: currentProduct.isi
             });
             
             renderCart();
@@ -496,6 +497,7 @@
                             <input type="hidden" name="cart[${index}][unit_id]" value="${item.real_unit_id}">
                             <input type="hidden" name="cart[${index}][unit_type]" value="${item.unit_type}">
                             <input type="hidden" name="cart[${index}][jumlah]" value="${item.jumlah}">
+                            <input type="hidden" name="cart[${index}][conversion]" value="${item.isi}">
                             <input type="hidden" name="cart[${index}][harga_satuan]" value="${item.harga_satuan}">
                         </td>
                         <td>${item.unit_name}</td>
