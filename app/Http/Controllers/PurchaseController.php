@@ -59,7 +59,7 @@ class PurchaseController extends Controller
 
         $bayar = $request->input('bayar');
         if($bayar === null || $bayar === '') {
-            $bayar = $total_harga;
+            $bayar = 0;
         }
 
         $purchase = Purchase::create([
