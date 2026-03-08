@@ -69,10 +69,10 @@
                 <td>{{ date('d/m/Y H:i', strtotime($transaction->tanggal)) }}</td>
             </tr>
             <tr>
-                <td>Kasir: {{ $transaction->user->name ?? '-' }}</td>
+                <td>Kasir: {{ $transaction->user?->name ?? '-' }}</td>
             </tr>
             <tr>
-                <td>Plg: {{ $transaction->customer->nama ?? 'Umum' }}</td>
+                <td>Plg: {{ $transaction->customer?->nama ?? 'Umum' }}</td>
             </tr>
         </table>
         
@@ -80,7 +80,7 @@
         
         <table>
             <tr>
-                <td colspan="3" style="padding-top: 3px;" class="truncate">{{ $detail->product->nama_produk }}</td>
+                <td colspan="3" style="padding-top: 3px;" class="truncate">{{ $detail->product?->nama_produk ?? 'Produk Dihapus' }}</td>
             </tr>
             <tr>
                 <td>{{ $detail->jumlah + 0 }}x</td>

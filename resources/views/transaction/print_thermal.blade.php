@@ -55,11 +55,11 @@
         </tr>
         <tr>
             <td>Plg</td>
-            <td>: {{ $transaction->customer->nama ?? 'Umum' }}</td>
+            <td>: {{ $transaction->customer?->nama ?? 'Umum' }}</td>
         </tr>
         <tr>
             <td>Ksr</td>
-            <td>: {{ $transaction->user->name ?? '-' }}</td>
+            <td>: {{ $transaction->user?->name ?? '-' }}</td>
         </tr>
     </table>
     <div class="line"></div>
@@ -67,7 +67,7 @@
     <table class="items">
         @foreach($transaction->details as $detail)
         <tr>
-            <td colspan="2">{{ $detail->product->nama_produk }}</td>
+            <td colspan="2">{{ $detail->product?->nama_produk ?? 'Produk Dihapus' }}</td>
         </tr>
         <tr>
             <td class="text-left">

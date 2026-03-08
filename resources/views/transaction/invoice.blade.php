@@ -283,11 +283,11 @@
                 <table class="meta-table">
                     <tr>
                         <td>Kepada:</td>
-                        <td style="text-align: right;"><strong>{{ $transaction->customer->nama ?? 'Umum' }}</strong></td>
+                        <td style="text-align: right;"><strong>{{ $transaction->customer?->nama ?? 'Umum' }}</strong></td>
                     </tr>
                     <tr>
                         <td>No HP:</td>
-                        <td style="text-align: right;">{{ $transaction->customer->no_hp ?? '-' }}</td>
+                        <td style="text-align: right;">{{ $transaction->customer?->no_hp ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td>Tanggal:</td>
@@ -299,7 +299,7 @@
                     </tr>
                     <tr>
                         <td>Kasir:</td>
-                        <td style="text-align: right;">{{ $transaction->user->name ?? '-' }}</td>
+                        <td style="text-align: right;">{{ $transaction->user?->name ?? '-' }}</td>
                     </tr>
                 </table>
             </div>
@@ -318,7 +318,7 @@
                 @foreach($transaction->details as $detail)
                 <tr>
                     <td>
-                        {{ $detail->product->nama_produk }}
+                        {{ $detail->product?->nama_produk ?? 'Produk Dihapus' }}
                         @if($detail->unit_info)
                             <div style="font-size: 11px; color: #777; margin-top: 2px;">{{ $detail->unit_info }}</div>
                         @endif
@@ -385,7 +385,7 @@
             <div class="signature-box">
                 <p>Penerima</p>
                 <div class="signature-line"></div>
-                <strong>{{ $transaction->customer->nama ?? 'Pelanggan' }}</strong>
+                <strong>{{ $transaction->customer?->nama ?? 'Pelanggan' }}</strong>
             </div>
             <div class="signature-box">
                 <p>Hormat Kami</p>
