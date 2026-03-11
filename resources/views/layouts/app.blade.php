@@ -115,7 +115,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto align-items-center">
+                {{-- Install App Button (Hidden by default) --}}
+                <li class="nav-item d-none" id="installAppContainer">
+                    <button class="btn btn-primary btn-sm mr-3" id="installAppBtn" style="border-radius: 20px;">
+                        <i class="fas fa-download mr-1"></i> Install App
+                    </button>
+                </li>
                 <div class="dropdown">
                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
                         {{ ucwords(auth()->user()->name) }}
@@ -299,6 +305,51 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     .catch(err => console.log('Service Worker registration failed', err));
             });
         }
+
+        // PWA Install Prompt Logic
+        let deferredPrompt;
+        const installAppContainer = document.getElementById('installAppContainer');
+        const installAppBtn = document.getElementById('installAppBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI notify the user they can install the PWA
+            if (installAppContainer) {
+                installAppContainer.classList.remove('d-none');
+            }
+        });
+
+        if (installAppBtn) {
+            installAppBtn.addEventListener('click', async () => {
+                if (deferredPrompt !== null && deferredPrompt !== undefined) {
+                    // Show the install prompt
+                    deferredPrompt.prompt();
+                    // Wait for the user to respond to the prompt
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                        if (installAppContainer) installAppContainer.classList.add('d-none');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    // We've used the prompt, and can't use it again, throw it away
+                    deferredPrompt = null;
+                }
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            // Hide the app-provided install promotion
+            if (installAppContainer) {
+                installAppContainer.classList.add('d-none');
+            }
+            // Clear the deferredPrompt so it can be garbage collected
+            deferredPrompt = null;
+            console.log('PWA was installed');
+        });
     </script>
 </body>
 
