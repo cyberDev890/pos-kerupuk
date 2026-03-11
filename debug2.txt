@@ -1,0 +1,65 @@
+[
+    {
+        "id": 101,
+        "customer_id": 16,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "93000.00",
+        "created_at": "2026-02-24T10:34:42.000000Z",
+        "updated_at": "2026-02-24T10:50:31.000000Z"
+    },
+    {
+        "id": 283,
+        "customer_id": 1,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "87000.00",
+        "created_at": "2026-02-25T16:44:35.000000Z",
+        "updated_at": "2026-02-28T17:12:13.000000Z"
+    },
+    {
+        "id": 404,
+        "customer_id": 2,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "88000.00",
+        "created_at": "2026-02-25T17:15:25.000000Z",
+        "updated_at": "2026-02-28T16:39:43.000000Z"
+    },
+    {
+        "id": 511,
+        "customer_id": 5,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "93000.00",
+        "created_at": "2026-02-25T17:53:55.000000Z",
+        "updated_at": "2026-02-25T17:53:55.000000Z"
+    },
+    {
+        "id": 905,
+        "customer_id": 7,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "88000.00",
+        "created_at": "2026-03-01T10:33:57.000000Z",
+        "updated_at": "2026-03-01T10:37:24.000000Z"
+    },
+    {
+        "id": 1136,
+        "customer_id": 15,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "93000.00",
+        "created_at": "2026-03-01T14:20:30.000000Z",
+        "updated_at": "2026-03-01T14:42:17.000000Z"
+    },
+    {
+        "id": 1261,
+        "customer_id": 19,
+        "product_id": 1,
+        "harga_jual": "12000.00",
+        "harga_jual_besar": "97000.00",
+        "created_at": "2026-03-01T16:46:47.000000Z",
+        "updated_at": "2026-03-01T16:46:47.000000Z"
+    }
+]

@@ -75,6 +75,18 @@
                 @endforeach
             </tbody>
             <tfoot>
+                @if(isset($transaction->biaya_kirim) && $transaction->biaya_kirim > 0)
+                <tr>
+                    <td colspan="3" class="text-right">Biaya Pengiriman</td>
+                    <td class="text-right">Rp {{ number_format($transaction->biaya_kirim, 0, ',', '.') }}</td>
+                </tr>
+                @endif
+                @if(isset($transaction->biaya_tambahan) && $transaction->biaya_tambahan > 0)
+                <tr>
+                    <td colspan="3" class="text-right">Biaya Tambahan</td>
+                    <td class="text-right">Rp {{ number_format($transaction->biaya_tambahan, 0, ',', '.') }}</td>
+                </tr>
+                @endif
                  <tr>
                     <td colspan="3" class="text-right"><strong>Grand Total</strong></td>
                     <td class="text-right"><strong>Rp {{ number_format($transaction->total_harga, 0, ',', '.') }}</strong></td>

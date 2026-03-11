@@ -166,7 +166,7 @@
                             ${namaProduk}
                             ${unitInfo}
                         </td>
-                        <td>${item.jumlah}</td> 
+                        <td>${parseInt(item.jumlah)}</td> 
                         <td class="text-right">${formatRupiah(item.harga_satuan)}</td>
                         <td class="text-right">${formatRupiah(item.subtotal)}</td>
                     </tr>
