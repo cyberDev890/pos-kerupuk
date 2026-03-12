@@ -48,6 +48,20 @@
              <a href="{{ route('report.profit-loss') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
+
+    <!-- Total Stock Value -->
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-indigo">
+            <div class="inner">
+                <h3>Rp {{ number_format($totalStockValue, 0, ',', '.') }}</h3>
+                <p>Total Nilai Stok (HPP)</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+             <a href="{{ route('master-data.product.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
     @endif
 
     <!-- Low Stock -->

@@ -54,6 +54,10 @@ class DashboardController extends Controller
                                 ->take(5)
                                 ->get();
 
+        // 6. Total Stock Nominal Value (Total Value of all products based on HPP)
+        $totalStockValue = \App\Models\Product::where('is_active', 1)
+                            ->sum(\Illuminate\Support\Facades\DB::raw('(stok + stok_gudang) * harga_beli'));
+
         return view('dashboard.index', compact(
             'todayTransactions', 
             'todayRevenue', 
@@ -61,7 +65,8 @@ class DashboardController extends Controller
             'lowStockProducts', 
             'chartLabels', 
             'chartData',
-            'recentTransactions'
+            'recentTransactions',
+            'totalStockValue'
         ));
     }
 }
