@@ -10,46 +10,48 @@
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-sm" id="table2">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Satuan</th>
-                        <th>Satuan Kecil</th>
-                        <th>Satuan Besar</th>
-                        <th>Isi / Konversi</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($units as $index => $unit)
+            <div class="table-responsive">
+                <table class="table table-sm" id="table2">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $unit->nama_satuan }}</td>
-                            <td>{{ $unit->satuan_kecil }}</td>
-                            <td>{{ $unit->satuan_besar }}</td>
-                            <td>1 {{ $unit->satuan_besar }} = {{ $unit->isi }} {{ $unit->satuan_kecil }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-warning mx-1 btn-edit" 
-                                        data-id="{{ $unit->id }}"
-                                        data-nama="{{ $unit->nama_satuan }}"
-                                        data-kecil="{{ $unit->satuan_kecil }}"
-                                        data-besar="{{ $unit->satuan_besar }}"
-                                        data-isi="{{ $unit->isi }}"
-                                        data-toggle="modal" data-target="#formUnit">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <a href="{{ route('master-data.unit.destroy', $unit->id) }}"
-                                        class="btn btn-danger mx-1" data-confirm-delete="true">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
+                            <th>No</th>
+                            <th>Nama Satuan</th>
+                            <th>Satuan Kecil</th>
+                            <th>Satuan Besar</th>
+                            <th>Isi / Konversi</th>
+                            <th>Opsi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($units as $index => $unit)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $unit->nama_satuan }}</td>
+                                <td>{{ $unit->satuan_kecil }}</td>
+                                <td>{{ $unit->satuan_besar }}</td>
+                                <td>1 {{ $unit->satuan_besar }} = {{ $unit->isi }} {{ $unit->satuan_kecil }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-warning mx-1 btn-edit" 
+                                            data-id="{{ $unit->id }}"
+                                            data-nama="{{ $unit->nama_satuan }}"
+                                            data-kecil="{{ $unit->satuan_kecil }}"
+                                            data-besar="{{ $unit->satuan_besar }}"
+                                            data-isi="{{ $unit->isi }}"
+                                            data-toggle="modal" data-target="#formUnit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <a href="{{ route('master-data.unit.destroy', $unit->id) }}"
+                                            class="btn btn-danger mx-1" data-confirm-delete="true">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

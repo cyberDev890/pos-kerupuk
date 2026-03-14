@@ -239,9 +239,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
 
             $("#table1").DataTable({
-                "responsive": true,
+                "responsive": false,
                 "lengthChange": true,
                 "autoWidth": false,
+                "scrollX": true,
                 "buttons": ["csv", "excel", "pdf", "print"]
             }).buttons().container().appendTo('#table1_wrapper .col-md-6:eq(0)');
             
@@ -252,7 +253,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 "ordering": true,
                 "info": true,
                 "autoWidth": false,
-                "responsive": true,
+                "responsive": false,
+                "scrollX": true,
                 "buttons": ["csv", "excel", "pdf", "print"]
             }).buttons().container().appendTo('#table2_wrapper .col-md-6:eq(0)');
 
@@ -264,6 +266,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 }
                 $(this).val(value);
             });
+
+            // Handle browser back-forward cache (BFCache)
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    $('#global-loader').hide();
+                } else {
+                    // Fallback to hide on every page show just in case
+                    $('#global-loader').hide();
+                }
+            };
         });
 
         /**

@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="text-muted small uppercase font-weight-bold">Suplier</label>
-                        <select name="supplier_id" id="supplierSelect" class="form-control select2" required>
+                        <select name="supplier_id" id="supplierSelect" class="form-control select2" style="width: 100%;" required>
                             <option value="">Pilih Suplier</option>
                             @foreach($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->nama }}</option>
@@ -185,7 +185,8 @@
     $(document).ready(function() {
         // Initialize Select2
         $('#productSelect, #supplierSelect').select2({
-            theme: 'bootstrap4'
+            theme: 'bootstrap4',
+            width: '100%'
         });
 
         let cart = [];

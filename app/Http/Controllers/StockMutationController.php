@@ -80,4 +80,28 @@ class StockMutationController extends Controller
             return back()->with('error', 'Gagal mutasi: ' . $e->getMessage());
         }
     }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $mutation = \App\Models\StockMutation::findOrFail($id);
+            $product = Product::findOrFail($mutation->product_id);
+
+            // Revert Stock: Back to Gudang
+            $product->increment('stok_gudang', $mutation->amount);
+            $product->decrement('stok', $mutation->amount);
+
+            $mutation->delete();
+
+            DB::commit();
+
+            return redirect()->route('stock.mutation.index')->with('success', "Mutasi dibatalkan! Stok dikembalikan ke Gudang.");
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Gagal membatalkan mutasi: ' . $e->getMessage());
+        }
+    }
 }

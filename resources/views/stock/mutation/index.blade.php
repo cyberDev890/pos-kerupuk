@@ -27,6 +27,7 @@
                         <th>Dari -> Ke</th>
                         <th>User</th>
                         <th>Catatan</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +47,15 @@
                             </td>
                             <td>{{ $mutation->user->name ?? '-' }}</td>
                             <td>{{ $mutation->notes }}</td>
+                            <td class="text-center">
+                                <form action="{{ route('stock.mutation.destroy', $mutation->id) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-sm btn-danger btn-delete" title="Batal Mutasi">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -61,4 +71,31 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.btn-delete').on('click', function(e) {
+            e.preventDefault();
+            let form = $(this).closest('form');
+            
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Mutasi ini akan dibatalkan dan stok akan dikembalikan ke Gudang!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Batalkan!',
+                cancelButtonText: 'Tutup'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection

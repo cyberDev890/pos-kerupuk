@@ -10,35 +10,37 @@
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-sm " id="table2">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Kategori</th>
-                        <th>Deskripsi</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($kategori as $index => $item)
+            <div class="table-responsive">
+                <table class="table table-sm " id="table2">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $item->nama_kategori }}</td>
-                            <td>{{ $item->deskripsi }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <x-kategori.form-kategori :id="$item->id" />
-                                    <a href="{{ route('master-data.kategori.destroy', $item->id) }}"
-                                        data-confirm-delete="true" class="btn btn-danger mx-1">
-                                        <i class="fa fa-trash"></i>
-
-                                    </a>
-                                </div>
-                            </td>
+                            <th>No</th>
+                            <th>Nama Kategori</th>
+                            <th>Deskripsi</th>
+                            <th>Opsi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($kategori as $index => $item)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $item->nama_kategori }}</td>
+                                <td>{{ $item->deskripsi }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <x-kategori.form-kategori :id="$item->id" />
+                                        <a href="{{ route('master-data.kategori.destroy', $item->id) }}"
+                                            data-confirm-delete="true" class="btn btn-danger mx-1">
+                                            <i class="fa fa-trash"></i>
+    
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 @endsection

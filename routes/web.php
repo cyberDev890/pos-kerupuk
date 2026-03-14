@@ -105,6 +105,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
+        Route::delete('/{id}', 'destroy')->name('destroy');
     });
     
     // Anggaran (Budget)

@@ -10,34 +10,36 @@
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
-            <table class="table table-sm" id="table2">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Email</th>
-                        <th>Nama Users</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($users as $index => $user)
+            <div class="table-responsive">
+                <table class="table table-sm" id="table2">
+                    <thead>
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <x-user.form-user :id="$user->id" />
-                                    <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger mx-1"
-                                        data-confirm-delete="true">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
+                            <th>No</th>
+                            <th>Email</th>
+                            <th>Nama Users</th>
+                            <th>Opsi</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($users as $index => $user)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <x-user.form-user :id="$user->id" />
+                                        <a href="{{ route('users.destroy', $user->id) }}" class="btn btn-danger mx-1"
+                                            data-confirm-delete="true">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 @endsection

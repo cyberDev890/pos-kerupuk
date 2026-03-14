@@ -30,7 +30,7 @@
 
                     <div class="form-group mb-4">
                         <label class="text-muted small uppercase font-weight-bold">Pilih Suplier</label>
-                        <select name="supplier_id" class="form-control select2" required>
+                        <select name="supplier_id" class="form-control select2" style="width: 100%;" required>
                             <option value="">Cari Suplier...</option>
                             @foreach($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->nama }}</option>
@@ -106,7 +106,8 @@
 <script>
     $(document).ready(function() {
         $('.select2').select2({
-            theme: 'bootstrap4'
+            theme: 'bootstrap4',
+            width: '100%'
         });
 
         // Format currency on typing
