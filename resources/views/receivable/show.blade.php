@@ -10,7 +10,7 @@
                 <h3 class="profile-username text-center">{{ $customer->nama }}</h3>
                 <p class="text-muted text-center">{{ $customer->alamat ?? '-' }}</p>
                 <div class="text-center mb-3">
-                     <span class="badge badge-danger p-2" style="font-size: 1.2rem;">
+                     <span class="badge badge-danger p-2 d-inline-block" style="font-size: 1.1rem; white-space: normal; line-height: 1.5;">
                          Sisa Hutang: Rp {{ number_format($transactions->sum('remaining_debt'), 0, ',', '.') }}
                      </span>
                 </div>
