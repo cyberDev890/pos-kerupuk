@@ -169,6 +169,27 @@
 </div>
 @endsection
 
+@section('styles')
+<style>
+    @media (max-width: 768px) {
+        .small-box .inner h3 {
+            font-size: 1.4rem !important;
+        }
+        .small-box .inner p {
+            font-size: 0.85rem !important;
+        }
+    }
+    @media (max-width: 576px) {
+        .small-box .inner h3 {
+            font-size: 1.1rem !important;
+        }
+        .small-box .inner p {
+            font-size: 0.75rem !important;
+        }
+    }
+</style>
+@endsection
+
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
