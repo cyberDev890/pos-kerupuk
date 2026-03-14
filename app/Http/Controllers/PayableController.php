@@ -77,4 +77,34 @@ class PayableController extends Controller
             
         return response()->json($payments);
     }
+
+    public function destroyPayment($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $payment = PurchasePayment::findOrFail($id);
+            $purchase = $payment->purchase;
+
+            // Revert Debt and Paid Amount
+            $purchase->decrement('bayar', $payment->amount);
+            $purchase->increment('remaining_debt', $payment->amount);
+
+            // Revert status if it was completed
+            if ($purchase->status == 'selesai') {
+                $purchase->update(['status' => 'pending']);
+            }
+            $purchase->save();
+
+            // Delete Payment Record
+            $payment->delete();
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Pembayaran hutang berhasil dibatalkan.']);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()], 500);
+        }
+    }
 }

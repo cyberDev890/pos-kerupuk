@@ -146,6 +146,7 @@
                                 <th class="border-top-0 py-3 text-right">Nominal</th>
                                 <th class="border-top-0 py-3 text-center">Petugas</th>
                                 <th class="border-top-0 py-3 pr-4">Catatan</th>
+                                <th class="border-top-0 py-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="history-content">
@@ -201,13 +202,13 @@
         // Handle History Button
         $('.btn-history').click(function() {
             let id = $(this).data('id');
-            $('#history-content').html('<tr><td colspan="4" class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...</td></tr>');
+            $('#history-content').html('<tr><td colspan="5" class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin mr-2"></i> Memuat data...</td></tr>');
             $('#modal-history').modal('show');
 
             $.get('/payable/payment/' + id + '/history', function(data) {
                 let html = '';
                 if(data.length === 0) {
-                    html = '<tr><td colspan="4" class="text-center py-4 text-muted italic">Belum ada riwayat pembayaran untuk faktur ini.</td></tr>';
+                    html = '<tr><td colspan="5" class="text-center py-4 text-muted italic">Belum ada riwayat pembayaran untuk faktur ini.</td></tr>';
                 } else {
                     data.forEach(item => {
                         html += `<tr>
@@ -215,6 +216,11 @@
                             <td class="text-right align-middle text-primary font-weight-bold">Rp ${new Intl.NumberFormat('id-ID').format(item.amount)}</td>
                             <td class="text-center align-middle"><span class="badge badge-light p-2">${item.user ? item.user.name : '-'}</span></td>
                             <td class="pr-4 align-middle text-muted small">${item.note ?? '-'}</td>
+                            <td class="align-middle">
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="cancelPayment(${item.id})" title="Batal Bayar">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </td>
                         </tr>`;
                     });
                 }
@@ -230,5 +236,29 @@
             });
         });
     });
+
+    function cancelPayment(paymentId) {
+        if (!confirm('Apakah Anda yakin ingin membatalkan pembayaran hutang ini? Nominal akan dikembalikan ke sisa hutang.')) {
+            return;
+        }
+
+        $.ajax({
+            url: "/payable/payment/" + paymentId,
+            type: 'DELETE',
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert('Gagal: ' + response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('Terjadi kesalahan saat membatalkan pembayaran.');
+            }
+        });
+    }
 </script>
 @endsection

@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/payment/{transactionId}/print', 'printPaymentHistory')->name('payment.print');
         Route::get('/{customerId}/print-all', 'printCustomerFullHistory')->name('print-all');
         Route::get('/payment/{id}/print-raw', 'printRawPayment')->name('payment.print-raw');
+        Route::delete('/payment/{id}', 'destroyPayment')->name('payment.destroy');
     });
 
     // Hutang (Payables)
@@ -65,6 +66,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', 'show')->name('show');
         Route::post('/payment', 'storePayment')->name('payment.store');
         Route::get('/payment/{purchaseId}/history', 'history')->name('payment.history');
+        Route::delete('/payment/{id}', 'destroyPayment')->name('payment.destroy');
     });
  
         // Transactions

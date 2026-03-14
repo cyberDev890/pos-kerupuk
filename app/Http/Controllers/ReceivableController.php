@@ -199,4 +199,33 @@ class ReceivableController extends Controller
             return response()->json(['success' => false, 'message' => "Gagal memuat struk: " . $e->getMessage()], 500);
         }
     }
+
+    public function destroyPayment($id)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $payment = TransactionPayment::findOrFail($id);
+            $transaction = $payment->transaction;
+            
+            // Revert Debt
+            $transaction->increment('remaining_debt', $payment->amount);
+            
+            // Revert status if it was completed
+            if ($transaction->status == 'selesai') {
+                $transaction->status = 'pending'; // or whatever the previous status was, usually pending for installments
+            }
+            $transaction->save();
+            
+            // Delete Payment Record
+            $payment->delete();
+            
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Pembayaran berhasil dibatalkan.']);
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['success' => false, 'message' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()], 500);
+        }
+    }
 }

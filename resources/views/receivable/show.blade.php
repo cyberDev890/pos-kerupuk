@@ -152,6 +152,7 @@
                                 <th>Jumlah</th>
                                 <th>Penerima</th>
                                 <th>Catatan</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="histBody">
@@ -180,14 +181,14 @@
 
     function showHistory(id, noTrx) {
         $('#histNoTrx').text(noTrx);
-        $('#histBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+        $('#histBody').html('<tr><td colspan="5" class="text-center">Loading...</td></tr>');
         $('#modalHistory').modal('show');
 
         // Fetch History
         $.get("{{ url('receivable/payment') }}/" + id + "/history", function(data) {
             let html = '';
             if(data.length === 0) {
-                html = '<tr><td colspan="4" class="text-center text-muted">Belum ada riwayat pembayaran.</td></tr>';
+                html = '<tr><td colspan="5" class="text-center text-muted">Belum ada riwayat pembayaran.</td></tr>';
             } else {
                 data.forEach(item => {
                     let date = new Date(item.payment_date).toLocaleDateString('id-ID');
@@ -198,11 +199,40 @@
                             <td class="font-weight-bold text-success">${formatRupiah(item.amount)}</td>
                             <td>${user}</td>
                             <td>${item.note || '-'}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="cancelPayment(${item.id})" title="Batal Bayar">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </td>
                         </tr>
                     `;
                 });
             }
             $('#histBody').html(html);
+        });
+    }
+
+    function cancelPayment(paymentId) {
+        if (!confirm('Apakah Anda yakin ingin membatalkan pembayaran ini? Nominal akan dikembalikan ke sisa hutang.')) {
+            return;
+        }
+
+        $.ajax({
+            url: "{{ url('receivable/payment') }}/" + paymentId,
+            type: 'DELETE',
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert('Gagal: ' + response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('Terjadi kesalahan saat membatalkan pembayaran.');
+            }
         });
     }
 
