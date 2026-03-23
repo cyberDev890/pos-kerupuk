@@ -73,6 +73,11 @@ class TransactionController extends Controller
                     $unitInfo = "1 {$product->unit->satuan_besar} = {$product->unit->isi} {$product->unit->satuan_kecil}";
                 }
                 
+                $conversion = 1;
+                if (isset($item['unit_type']) && $item['unit_type'] == 'besar') {
+                     $conversion = isset($product->unit) ? $product->unit->isi : ($item['conversion'] ?? 1);
+                }
+
                 $cartItems[] = [
                     'product_id' => $item['product_id'],
                     'unit_id' => $item['unit_id'],
@@ -80,7 +85,7 @@ class TransactionController extends Controller
                     'harga_satuan' => $harga_satuan,
                     'subtotal' => $subtotal,
                     'hpp' => $product->harga_beli,
-                    'isi' => $item['conversion'] ?? 1, 
+                    'isi' => $conversion, 
                     'unit_type' => $item['unit_type'] ?? 'kecil',
                     'unit_info' => $unitInfo
                 ];
