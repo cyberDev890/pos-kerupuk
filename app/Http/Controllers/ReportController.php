@@ -29,9 +29,13 @@ class ReportController extends Controller
             $trxRevenue = $trx->total_harga - $trx->biaya_kirim - $trx->biaya_tambahan;
             $totalRevenue += $trxRevenue;
 
+            $trxCOGS = 0;
             foreach ($trx->details as $detail) {
-                $totalCOGS += $this->calculateTransactionDetailCOGS($detail);
+                $cogs = $this->calculateTransactionDetailCOGS($detail);
+                $trxCOGS += $cogs;
+                $totalCOGS += $cogs;
             }
+            $trx->total_hpp = $trxCOGS;
         }
 
         // 2. Returns (Deductions)

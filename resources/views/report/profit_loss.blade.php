@@ -137,6 +137,8 @@
                                 <th>Total Belanja</th>
                                 <th>Biaya Lain</th>
                                 <th>Total Bersih</th>
+                                <th>HPP Transaksi</th>
+                                <th>Margin (Laba)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,7 +149,14 @@
                                 <td>{{ $trx->customer->nama ?? 'Umum' }}</td>
                                 <td>Rp {{ number_format($trx->total_harga, 0, ',', '.') }}</td>
                                 <td>Rp {{ number_format($trx->biaya_kirim + $trx->biaya_tambahan, 0, ',', '.') }}</td>
-                                <td>Rp {{ number_format($trx->total_harga - $trx->biaya_kirim - $trx->biaya_tambahan, 0, ',', '.') }}</td>
+                                @php
+                                    $totalBersih = $trx->total_harga - $trx->biaya_kirim - $trx->biaya_tambahan;
+                                @endphp
+                                <td>Rp {{ number_format($totalBersih, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($trx->total_hpp, 0, ',', '.') }}</td>
+                                <td class="{{ $totalBersih - $trx->total_hpp >= 0 ? 'text-primary' : 'text-danger' }}">
+                                    Rp {{ number_format($totalBersih - $trx->total_hpp, 0, ',', '.') }}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
