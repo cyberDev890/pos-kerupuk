@@ -59,15 +59,13 @@ class TransactionController extends Controller
             $biaya_tambahan = $request->biaya_tambahan ?? 0;
             $cartItems = [];
 
+            $productStocks = []; // Melacak pemakaian stok dalam satu transaksi
+
             // Calculate Total & Prepare Items
             foreach ($request->cart as $item) {
                 $product = Product::with('unit')->find($item['product_id']);
                 // ... (existing logic)
                 
-                $harga_satuan = $item['harga_satuan'];
-                $subtotal = $item['jumlah'] * $harga_satuan;
-                $total_harga += $subtotal;
-
                 $unitInfo = null;
                 if ($product->unit) {
                     $unitInfo = "1 {$product->unit->satuan_besar} = {$product->unit->isi} {$product->unit->satuan_kecil}";
@@ -77,6 +75,22 @@ class TransactionController extends Controller
                 if (isset($item['unit_type']) && $item['unit_type'] == 'besar') {
                      $conversion = isset($product->unit) ? $product->unit->isi : ($item['conversion'] ?? 1);
                 }
+
+                // Cek Validasi Stok Backend
+                if (!isset($productStocks[$product->id])) {
+                    $productStocks[$product->id] = $product->stok;
+                }
+                
+                $qtyInPcs = $item['jumlah'] * $conversion;
+                $productStocks[$product->id] -= $qtyInPcs;
+                
+                if ($productStocks[$product->id] < 0) {
+                    throw new \Exception("Stok produk '{$product->nama_produk}' tidak mencukupi untuk jumlah yang diminta!");
+                }
+
+                $harga_satuan = $item['harga_satuan'];
+                $subtotal = $item['jumlah'] * $harga_satuan;
+                $total_harga += $subtotal;
 
                 $cartItems[] = [
                     'product_id' => $item['product_id'],

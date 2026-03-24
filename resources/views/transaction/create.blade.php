@@ -10,6 +10,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
         {{ session('success') }}
+        <script>localStorage.removeItem('pos_cart');</script>
         @if(session('last_transaction_id'))
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -277,7 +278,7 @@
             theme: 'bootstrap4'
         });
 
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('pos_cart')) || [];
         let subTotal = 0;
         let grandTotal = 0;
         
@@ -285,6 +286,8 @@
         let selectedUnitType = 'besar'; 
 
         let customerPrices = {}; // { productId: { khusus_kecil: 1000, khusus_besar: 2000 } }
+        
+        setTimeout(() => { if (cart.length > 0) renderCart(); }, 100);
 
         // Customer Selection Logic
         $('#customerSelect').change(function() {
@@ -461,6 +464,27 @@
             let itemSubtotal = qty * price;
             let unitName = selectedUnitType === 'kecil' ? currentProduct.unitKecil : currentProduct.unitBesar;
 
+            // Validasi Stok Frontend
+            let qtyAkanDitambahDalamPcs = selectedUnitType === 'besar' ? (qty * currentProduct.isi) : qty;
+            let qtyDiKeranjangDalamPcs = 0;
+            
+            cart.forEach(item => {
+                // Konversi string ke angka jika perlu
+                if (item.product_id == currentProduct.id) {
+                    let qtyItemIni = item.unit_type === 'besar' ? (item.jumlah * item.isi) : item.jumlah;
+                    qtyDiKeranjangDalamPcs += qtyItemIni;
+                }
+            });
+
+            if ((qtyDiKeranjangDalamPcs + qtyAkanDitambahDalamPcs) > currentProduct.stok) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Stok Tidak Cukup!',
+                    text: 'Total produk ini di keranjang ditambah yang akan dimasukkan melebihi sisa stok riil (' + currentProduct.stok + ').'
+                });
+                return;
+            }
+
             cart.push({
                 product_id: currentProduct.id,
                 nama: currentProduct.nama,
@@ -483,6 +507,7 @@
         });
 
         function renderCart() {
+            localStorage.setItem('pos_cart', JSON.stringify(cart));
             let html = '';
             subTotal = 0;
             
@@ -598,7 +623,12 @@
                     $('#kembalianDisplay').text(formatRupiah(kembalian));
                 }
             } else {
+                $('#btnCheckout').html('<i class="fas fa-save"></i> Proses Transaksi');
+                $('#btnCheckout').removeClass('btn-warning btn-danger').addClass('btn-primary');
                 $('#btnCheckout').prop('disabled', true);
+                
+                $('#kembalianDisplay').text('Rp 0');
+                $('#kembalianDisplay').removeClass('text-danger').addClass('text-success');
             }
         }
 

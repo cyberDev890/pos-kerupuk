@@ -53,7 +53,8 @@ class StockMutationController extends Controller
             }
 
             if ($product->stok_gudang < $qtyInPcs) {
-                return back()->with('error', "Stok Gudang tidak cukup! (Tersedia: {$product->stok_gudang} Pcs, Diminta: {$qtyInPcs} Pcs)");
+                $tersediaUnit = $unitChoice == 'besar' ? floor($product->stok_gudang / $conversion) . " " . $unitLabel : $product->stok_gudang . " " . $unitLabel;
+                return back()->with('error', "Stok Gudang tidak cukup! (Tersedia: {$tersediaUnit}, Diminta: {$qty} {$unitLabel})");
             }
 
             // Execute Mutation

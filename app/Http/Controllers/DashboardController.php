@@ -26,9 +26,12 @@ class DashboardController extends Controller
 
         // 3. Low Stock Items (Threshold based on Product Setting)
         $lowStockProducts = \App\Models\Product::with('unit')
-                                ->whereColumn('stok', '<=', 'stok_min')
-                                ->orderBy('stok', 'asc')
-                                ->take(5)
+                                ->where(function($query) {
+                                    $query->whereColumn('stok_gudang', '<=', 'stok_min')
+                                          ->orWhereColumn('stok', '<=', 'stok_min');
+                                })
+                                ->orderBy('stok_gudang', 'asc')
+                                ->take(10)
                                 ->get();
 
         // 4. Sales Chart (Last 7 Days) - Optimized to 1 Query

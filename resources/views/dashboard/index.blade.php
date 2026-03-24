@@ -143,23 +143,26 @@
             <div class="card-header">
                 <h3 class="card-title">Stok Menipis (<= Min)</h3>
             </div>
-            <div class="card-body p-0">
-                <table class="table table-sm">
+            <div class="card-body p-0" style="max-height: 350px; overflow-y: auto;">
+                <table class="table table-sm table-head-fixed text-nowrap">
                     <thead>
                         <tr>
                             <th>Produk</th>
-                            <th style="width: 40px">Stok</th>
+                            <th class="text-right">Stok Aktual</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($lowStockProducts as $product)
                         <tr>
-                            <td>{{ $product->nama_produk }}</td>
-                            <td><span class="badge bg-danger">{{ $product->stok }}</span></td>
+                            <td>{{ $product->nama_produk }} <br><small class="text-muted">Min: {{ $product->stok_min }}</small></td>
+                            <td class="text-right">
+                                G: <span class="badge {{ $product->stok_gudang <= $product->stok_min ? 'bg-danger' : 'bg-success' }}" title="Gudang">{{ $product->stok_gudang }}</span>
+                                T: <span class="badge {{ $product->stok <= $product->stok_min ? 'bg-danger' : 'bg-success' }}" title="Toko">{{ $product->stok }}</span>
+                            </td>
                         </tr>
                         @endforeach
                         @if(count($lowStockProducts) == 0)
-                            <tr><td colspan="2" class="text-center">Stok Aman</td></tr>
+                            <tr><td colspan="2" class="text-center py-4 text-muted">Seluruh Stok Aman</td></tr>
                         @endif
                     </tbody>
                 </table>

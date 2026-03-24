@@ -36,7 +36,7 @@
                                     data-unit="{{ $product->unit->satuan_kecil ?? 'Pcs' }}"
                                     data-unit-besar="{{ $product->unit->satuan_besar ?? 'Bal' }}"
                                     data-isi="{{ $product->unit->isi ?? 1 }}">
-                                    {{ $product->nama_produk }} (Gudang: {{ $product->stok_gudang }})
+                                    {{ $product->nama_produk }} (Gudang: {{ floor($product->stok_gudang / max($product->unit->isi ?? 1, 1)) }} {{ $product->unit->satuan_besar ?? 'Bal' }})
                                 </option>
                             @endforeach
                         </select>
@@ -46,8 +46,8 @@
                         <div class="callout callout-info">
                             <h5>Info Stok</h5>
                             <p>
-                                <strong>Gudang:</strong> <span id="infoGudang">-</span> <span class="unit-name"></span><br>
-                                <strong>Toko:</strong> <span id="infoToko">-</span> <span class="unit-name"></span>
+                                <strong>Gudang:</strong> <span id="infoGudang">-</span><br>
+                                <strong>Toko:</strong> <span id="infoToko">-</span>
                             </p>
                         </div>
                     </div>
@@ -74,6 +74,7 @@
 
 @section('scripts')
 <script src="{{ asset('adminlte') }}/plugins/select2/js/select2.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function() {
         $('.select2').select2({ theme: 'bootstrap4' });
@@ -84,14 +85,43 @@
             let data = $(this).find(':selected').data();
             selectedProduct = data;
             
-            $('#infoGudang').text(data.stokGudang);
-            $('#infoToko').text(data.stokToko);
-            $('.unit-name').text(data.unit);
+            let isi = Math.max(data.isi || 1, 1);
+            let maxBalGudang = Math.floor(data.stokGudang / isi);
+            let sisaPcsGudang = data.stokGudang % isi;
+            
+            let gudangText = `${maxBalGudang} ${data.unitBesar || 'Bal'}`;
+            if (sisaPcsGudang > 0) gudangText += ` + ${sisaPcsGudang} ${data.unit || 'Pcs'}`;
+            gudangText += ` (Total: ${data.stokGudang} ${data.unit || 'Pcs'})`;
+            $('#infoGudang').text(gudangText);
+            
+            let maxBalToko = Math.floor(data.stokToko / isi);
+            let sisaPcsToko = data.stokToko % isi;
+            
+            let tokoText = `${maxBalToko} ${data.unitBesar || 'Bal'}`;
+            if (sisaPcsToko > 0) tokoText += ` + ${sisaPcsToko} ${data.unit || 'Pcs'}`;
+            tokoText += ` (Total: ${data.stokToko} ${data.unit || 'Pcs'})`;
+            $('#infoToko').text(tokoText);
+            
             $('.big-unit-name').text(data.unitBesar || 'Bal');
             
             $('#conversionInfo').text("1 " + (data.unitBesar || 'Bal') + " = " + (data.isi || 1) + " " + (data.unit || 'Pcs'));
             
+            // Validasi Input
+            $('input[name="jumlah"]').attr('max', maxBalGudang).val('');
+            
             $('#infoArea').slideDown();
+        });
+
+        $('input[name="jumlah"]').on('input change keyup', function() {
+            let max = parseInt($(this).attr('max')) || 0;
+            let val = parseInt($(this).val()) || 0;
+            if (val > max) {
+                $(this).val(max);
+                Swal.fire({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
+                    icon: 'warning', title: 'Maks. Gudang: ' + max + ' Bal!'
+                });
+            }
         });
 
     });
