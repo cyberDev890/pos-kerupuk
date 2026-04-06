@@ -1,6 +1,6 @@
 <div>
     <button type="button" class="btn {{ $id ? 'btn-warning' : 'btn-primary' }}" data-toggle="modal"
-        data-target="#formUser{{ $id ?? '' }}">
+        data-target="#formUser{{ $domId }}">
         @if ($id)
             <i class="fas fa-edit"></i>
         @else
@@ -8,10 +8,10 @@
         @endif
     </button>
 
-    <div class="modal fade" id="formUser{{ $id ?? '' }}">
+    <div class="modal fade" id="formUser{{ $domId }}">
         <form action="{{ route('users.index') }}" method="POST">
             @csrf
-            <input type="hidden" name="id" value="{{ $id ?? '' }}">
+            <input type="hidden" name="id" value="{{ $id }}">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -36,13 +36,13 @@
 
                         <div class="form-group my-1">
                             <label for="role"> Role</label>
-                            <select name="role" id="role-{{ $id }}" class="form-control role-select">
+                            <select name="role" id="role-{{ $domId }}" class="form-control role-select">
                                 <option value="admin" {{ $role == 'admin' ? 'selected' : '' }}>Admin</option>
                                 <option value="karyawan" {{ $role == 'karyawan' ? 'selected' : '' }}>Karyawan</option>
                             </select>
                         </div>
 
-                        <div id="permissions-section-{{ $id }}"
+                        <div id="permissions-section-{{ $domId }}"
                             class="permissions-section {{ $role == 'admin' ? 'd-none' : '' }}">
                             <hr>
                             <label class="mt-2 text-primary font-weight-bold"><i class="fas fa-key mr-1"></i> Hak Akses Menu</label>
@@ -178,29 +178,42 @@
                         </div>
 
                         <script>
-                            $(document).ready(function() {
-                                // Toggle section visibility based on role
-                                $('#role-{{ $id }}').on('change', function() {
-                                    if ($(this).val() === 'karyawan') {
-                                        $('#permissions-section-{{ $id }}').fadeOut().removeClass('d-none').fadeIn();
-                                    } else {
-                                        $('#permissions-section-{{ $id }}').fadeOut();
-                                    }
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const roleSelect = document.getElementById('role-{{ $domId }}');
+                                const permissionsSection = document.getElementById('permissions-section-{{ $domId }}');
+                                
+                                if (roleSelect && permissionsSection) {
+                                    roleSelect.addEventListener('change', function() {
+                                        if (this.value === 'karyawan') {
+                                            permissionsSection.classList.remove('d-none');
+                                            // Optional: Add simple fade effect manually if desired, but removing d-none is enough for it to appear
+                                        } else {
+                                            permissionsSection.classList.add('d-none');
+                                        }
+                                    });
+                                }
+
+                                // Handle parent/child checkbox logic with vanilla JS
+                                const parentCheckboxes = permissionsSection.querySelectorAll('.parent-checkbox');
+                                const childCheckboxes = permissionsSection.querySelectorAll('.child-checkbox');
+
+                                parentCheckboxes.forEach(parent => {
+                                    parent.addEventListener('change', function() {
+                                        const group = this.getAttribute('data-group');
+                                        const isChecked = this.checked;
+                                        const children = permissionsSection.querySelectorAll(`input[data-parent="${group}"]`);
+                                        children.forEach(child => child.checked = isChecked);
+                                    });
                                 });
 
-                                // Auto check/uncheck children when parent is toggled
-                                $('.parent-checkbox').on('change', function() {
-                                    let group = $(this).data('group');
-                                    let isChecked = $(this).is(':checked');
-                                    $(`input[data-parent="${group}"]`).prop('checked', isChecked);
-                                });
-
-                                // Auto check parent if any child is checked
-                                $('.child-checkbox').on('change', function() {
-                                    let parentId = $(this).data('parent');
-                                    if ($(this).is(':checked')) {
-                                        $(`input[data-group="${parentId}"]`).prop('checked', true);
-                                    }
+                                childCheckboxes.forEach(child => {
+                                    child.addEventListener('change', function() {
+                                        const parentId = this.getAttribute('data-parent');
+                                        if (this.checked) {
+                                            const parent = permissionsSection.querySelector(`input[data-group="${parentId}"]`);
+                                            if (parent) parent.checked = true;
+                                        }
+                                    });
                                 });
                             });
                         </script>

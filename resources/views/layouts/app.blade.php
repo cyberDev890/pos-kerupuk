@@ -224,9 +224,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $('a.nav-link, a.btn').on('click', function(e) {
                 let href = $(this).attr('href');
                 let target = $(this).attr('target');
+                let isConfirmDelete = $(this).attr('data-confirm-delete') === 'true';
                 
-                // Only show if it's a real navigation to another internal page
-                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !target) {
+                // Only show if it's a real navigation to another internal page and not a delete confirmation
+                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !target && !isConfirmDelete) {
                     $('#global-loader').css('display', 'flex');
                 }
             });

@@ -12,20 +12,21 @@ class FormUser extends Component
     /**
      * Create a new component instance.
      */
-    public $id, $name, $email, $role, $permissions;
+    public $id, $domId, $name, $email, $role, $permissions;
     public function __construct($id = null)
     {
+        $this->id = $id;
+        $this->domId = $id ?? 'new';
         if ($id) {
             $user = User::find($id);
             if ($user) {
-                $this->id = $user->id;
                 $this->name = $user->name;
                 $this->email = $user->email;
                 $this->role = $user->role;
                 $this->permissions = $user->permissions ?? [];
             }
         } else {
-            $this->role = 'karyawan';
+            $this->role = 'admin';
             $this->permissions = [];
         }
     }
