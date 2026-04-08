@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', 'show')->name('show');
         Route::post('/payment', 'storePayment')->name('payment.store');
         Route::get('/payment/{purchaseId}/history', 'history')->name('payment.history');
+        Route::get('/payment/{purchaseId}/print', 'printPaymentHistory')->name('payment.print');
+        Route::get('/{supplierId}/print-all', 'printSupplierFullHistory')->name('print-all');
         Route::delete('/payment/{id}', 'destroyPayment')->name('payment.destroy');
     });
  

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Purchase;
 use App\Models\PurchasePayment;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,18 +12,27 @@ class PayableController extends Controller
 {
     public function index()
     {
-        $payables = Purchase::with('supplier')
-            ->where('remaining_debt', '>', 0)
-            ->orderBy('tanggal', 'desc')
-            ->get();
+        $suppliers = Supplier::whereHas('purchases', function($q) {
+            $q->where('remaining_debt', '>', 0);
+        })->withSum(['purchases' => function($q) {
+            $q->where('remaining_debt', '>', 0); // only unpaid purchases are summed for the main listing
+        }], 'remaining_debt')
+        ->get();
             
-        return view('payable.index', compact('payables'));
+        return view('payable.index', compact('suppliers'));
     }
 
     public function show($id)
     {
-        $purchase = Purchase::with(['supplier', 'payments.user', 'user'])->findOrFail($id);
-        return response()->json($purchase);
+        $supplier = Supplier::findOrFail($id);
+        
+        $purchases = Purchase::with(['supplier', 'payments.user'])
+            ->where('supplier_id', $id)
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+            
+        return view('payable.show', compact('supplier', 'purchases'));
     }
 
     public function storePayment(Request $request)
@@ -106,5 +116,22 @@ class PayableController extends Controller
             DB::rollback();
             return response()->json(['success' => false, 'message' => 'Gagal membatalkan pembayaran: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function printPaymentHistory($purchaseId)
+    {
+        $purchase = Purchase::with(['supplier', 'payments.user', 'details.product'])->findOrFail($purchaseId);
+        return view('payable.print_history', compact('purchase'));
+    }
+
+    public function printSupplierFullHistory($supplierId)
+    {
+        $supplier = Supplier::findOrFail($supplierId);
+        $purchases = Purchase::where('supplier_id', $supplierId)
+                        ->orderBy('tanggal', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->get();
+
+        return view('payable.print_supplier_history', compact('supplier', 'purchases'));
     }
 }
