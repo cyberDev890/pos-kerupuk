@@ -231,6 +231,12 @@
                                      <input type="text" name="biaya_tambahan" id="inputBiayaTambahan" class="form-control form-control-sm text-right fee-input currency-input" value="0" disabled placeholder="0" inputmode="numeric">
                                  </td>
                              </tr>
+                             <tr>
+                                 <th class="align-middle">Sopir</th>
+                                 <td>
+                                     <input type="text" name="sopir" id="inputSopir" class="form-control form-control-sm" disabled placeholder="Nama Supir (Opsional)">
+                                 </td>
+                             </tr>
                              <tr class="bg-light border-top">
                                  <th class="h4 align-middle">Grand Total</th>
                                  <td class="text-right h4 font-weight-bold text-primary" id="grandTotalDisplay">Rp 0</td>
@@ -296,6 +302,7 @@
                 // Customer selected
                 $('#inputBiayaKirim').prop('disabled', false);
                 $('#inputBiayaTambahan').prop('disabled', false);
+                $('#inputSopir').prop('disabled', false);
                 $('#customerInfo').show();
                 
                 // Fetch Prices
@@ -318,6 +325,7 @@
                 // Umum
                 $('#inputBiayaKirim').prop('disabled', true).val(0);
                 $('#inputBiayaTambahan').prop('disabled', true).val(0);
+                $('#inputSopir').prop('disabled', true).val('');
                 $('#customerInfo').hide();
                 customerPrices = {};
                 

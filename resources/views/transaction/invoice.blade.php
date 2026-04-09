@@ -277,6 +277,7 @@
                 <h1>JAYA ABADI</h1>
                 <p>Jl. Ijen Dukusia Rambipuji</p>
                 <p>082330634269</p>
+                <p style="margin-top: 15px; font-weight: bold;">Sopir : {{ $transaction->sopir ?: '-' }}</p>
             </div>
             <div class="invoice-meta">
                 <h1 class="invoice-title">INVOICE</h1>

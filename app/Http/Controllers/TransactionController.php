@@ -49,6 +49,7 @@ class TransactionController extends Controller
             'bayar' => 'required|numeric|min:0',
             'biaya_kirim' => 'nullable|numeric|min:0',
             'biaya_tambahan' => 'nullable|numeric|min:0',
+            'sopir' => 'nullable|string',
         ]);
 
         try {
@@ -139,6 +140,7 @@ class TransactionController extends Controller
                 'remaining_debt' => $remaining_debt,
                 'biaya_kirim' => $biaya_kirim,
                 'biaya_tambahan' => $biaya_tambahan,
+                'sopir' => $request->sopir,
                 'status' => $status,
                 'user_id' => auth()->id(),
             ]);
