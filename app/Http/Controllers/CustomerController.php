@@ -146,4 +146,47 @@ class CustomerController extends Controller
 
         return redirect()->route('master-data.customer.show', $id)->with('success', 'Harga khusus berhasil disimpan.');
     }
+
+    public function umumPrices()
+    {
+        $products = \App\Models\Product::leftJoin('units', 'products.unit_id', '=', 'units.id')
+            ->select(
+                'products.id', 
+                'products.nama_produk', 
+                'products.harga_jual', 
+                'products.harga_jual_besar',
+                'products.harga_beli',
+                'units.isi',
+                'units.nama_satuan',
+                'units.satuan_kecil',
+                'units.satuan_besar'
+            )
+            ->whereNull('products.deleted_at')
+            ->where('products.is_active', 1)
+            ->get();
+
+        return view('customer.umum', compact('products'));
+    }
+
+    public function storeUmumPrices(Request $request)
+    {
+        $request->validate([
+            'prices' => 'required|array',
+            'prices.*.product_id' => 'required|exists:products,id',
+            'prices.*.harga_jual' => 'required|string', 
+            'prices.*.harga_jual_besar' => 'nullable|string',
+        ]);
+
+        foreach ($request->prices as $price) {
+            $hargaKecil = $price['harga_jual'] ? str_replace('.', '', $price['harga_jual']) : 0;
+            $hargaBesar = $price['harga_jual_besar'] ? str_replace('.', '', $price['harga_jual_besar']) : 0;
+            
+            \App\Models\Product::where('id', $price['product_id'])->update([
+                'harga_jual' => $hargaKecil,
+                'harga_jual_besar' => $hargaBesar > 0 ? $hargaBesar : null
+            ]);
+        }
+
+        return redirect()->route('master-data.customer.index')->with('success', 'Harga Pelanggan Umum berhasil diperbarui.');
+    }
 }

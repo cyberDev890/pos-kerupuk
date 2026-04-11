@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('unit', \App\Http\Controllers\UnitController::class)->except(['create', 'edit', 'show']);
         Route::resource('supplier', \App\Http\Controllers\SupplierController::class)->except(['create', 'edit', 'show']);
         Route::resource('customer', \App\Http\Controllers\CustomerController::class)->except(['create', 'edit']);
+        Route::get('customer/umum/prices', [\App\Http\Controllers\CustomerController::class, 'umumPrices'])->name('customer.umumPrices');
+        Route::post('customer/umum/prices', [\App\Http\Controllers\CustomerController::class, 'storeUmumPrices'])->name('customer.storeUmumPrices');
         Route::get('customer/{id}/prices', [\App\Http\Controllers\CustomerController::class, 'getPrices'])->name('customer.getPrices');
         Route::post('customer/{id}/prices', [\App\Http\Controllers\CustomerController::class, 'storePrices'])->name('customer.storePrices');
     });

@@ -4,9 +4,14 @@
     <div class="card">
         <div class="d-flex justify-content-between p-2 border">
             <h4 class="h5"> Data Pelanggan</h4>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formCustomer">
-                Pelanggan Baru
-            </button>
+            <div>
+                <a href="{{ route('master-data.customer.umumPrices') }}" class="btn btn-info mr-2">
+                    <i class="fas fa-tags"></i> Set Harga Umum
+                </a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#formCustomer">
+                    Pelanggan Baru
+                </button>
+            </div>
         </div>
         <div class="card-body">
             <x-alert :errors="$errors" />
