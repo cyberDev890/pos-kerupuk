@@ -34,7 +34,7 @@
 
         <div class="header">
             <h2>RIWAYAT HUTANG SUPLIER</h2>
-            <p>JAYA ABADI - Jl. Ijen Dukusia Rambipuji</p>
+            <p>{{ config('app.name') }} - {{ env('APP_ADDRESS') }}</p>
         </div>
 
         <table class="meta-table">

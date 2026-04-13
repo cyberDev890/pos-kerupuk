@@ -17,7 +17,6 @@ class Product extends Model
         'harga_beli',
         'unit_id',
         'stok',
-        'stok_gudang',
         'stok_min',
         'is_active',
     ];

@@ -37,7 +37,7 @@
 
     <div class="text-center bold">
         STRUK PEMBELIAN<br>
-        JAYA ABADI
+        {{ config('app.name') }}
     </div>
     <div class="line"></div>
 

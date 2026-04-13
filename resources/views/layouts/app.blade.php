@@ -87,6 +87,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
             letter-spacing: 1px;
             text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
+        .brand-link {
+            white-space: normal !important;
+            height: auto !important;
+            padding: 0.8125rem 0.5rem !important;
+        }
+        .brand-text {
+            display: inline-block !important;
+            max-width: 100% !important;
+            font-size: 1rem !important;
+            line-height: 1.2 !important;
+            vertical-align: middle !important;
+        }
     </style>
 
     @yield('styles')

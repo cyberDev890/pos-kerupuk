@@ -600,6 +600,17 @@
             let customerId = $('#customerSelect').val();
             
             if(grandTotal > 0) {
+                // Minimum payment requirement: 5000
+                if (bayar < 5000) {
+                    $('#btnCheckout').prop('disabled', true);
+                    $('#btnCheckout').html('<i class="fas fa-ban"></i> Pembayaran Minimal Rp 5.000');
+                    $('#btnCheckout').removeClass('btn-primary btn-warning').addClass('btn-danger');
+                    
+                    $('#kembalianDisplay').text('Kurang: ' + formatRupiah(grandTotal - bayar));
+                    $('#kembalianDisplay').removeClass('text-success').addClass('text-danger');
+                    return;
+                }
+
                 // Allow checkout if fully paid OR if customer is selected (Debt allowed)
                 if (bayar >= grandTotal || customerId) {
                     $('#btnCheckout').prop('disabled', false);

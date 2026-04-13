@@ -46,7 +46,7 @@ class TransactionController extends Controller
             'cart.*.product_id' => 'required|exists:products,id',
             'cart.*.unit_id' => 'required|exists:units,id',
             'cart.*.jumlah' => 'required|numeric|min:0.01',
-            'bayar' => 'required|numeric|min:0',
+            'bayar' => 'required|numeric|min:5000',
             'biaya_kirim' => 'nullable|numeric|min:0',
             'biaya_tambahan' => 'nullable|numeric|min:0',
             'sopir' => 'nullable|string',

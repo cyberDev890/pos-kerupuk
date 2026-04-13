@@ -106,9 +106,9 @@ class PurchaseController extends Controller
                 'unit_info' => $unitInfo,
             ]);
 
-            // Update Stok Gudang Produk (New Logic: Purchase -> Gudang)
+            // Update Stok Toko Produk (New Logic: Purchase -> Toko)
             $product = Product::find($item['product_id']);
-            $product->increment('stok_gudang', $item['jumlah'] * $isi);
+            $product->increment('stok', $item['jumlah'] * $isi);
             
             // Update Harga Beli Produk (Last Purchase Price converted to smallest unit)
             if ($item['harga_satuan'] > 0) {
@@ -159,7 +159,7 @@ class PurchaseController extends Controller
 
                 $product = Product::withTrashed()->find($detail->product_id);
                 if ($product) {
-                    $product->decrement('stok_gudang', $qtyInPcs);
+                    $product->decrement('stok', $qtyInPcs);
                 }
             }
 

@@ -104,13 +104,6 @@ Route::middleware('auth')->group(function () {
  
         // Reports
         Route::get('/report/profit-loss', [\App\Http\Controllers\ReportController::class, 'profitLoss'])->name('report.profit-loss')->middleware('permission:report,report.profit-loss');
-    // Stock Mutation
-    Route::prefix('stock/mutation')->name('stock.mutation.')->middleware('permission:stock-mutation')->controller(\App\Http\Controllers\StockMutationController::class)->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::delete('/{id}', 'destroy')->name('destroy');
-    });
     
     // Anggaran (Budget)
     Route::prefix('budget')->name('budget.')->middleware('permission:budget,budget.salary,budget.operational')->group(function () {

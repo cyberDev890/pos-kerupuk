@@ -274,8 +274,8 @@
     <div class="invoice-box">
         <div class="header">
             <div class="company-details">
-                <h1>JAYA ABADI</h1>
-                <p>Jl. Ijen Dukusia Rambipuji</p>
+                <h1>{{ config('app.name') }}</h1>
+                <p>{{ env('APP_ADDRESS') }}</p>
                 <p>082330634269</p>
                 <p style="margin-top: 15px; font-weight: bold;">Sopir : {{ $transaction->sopir ?: '-' }}</p>
             </div>
@@ -391,7 +391,7 @@
             <div class="signature-box">
                 <p>Hormat Kami</p>
                 <div class="signature-line"></div>
-                <strong>JAYA ABADI</strong>
+                <strong>{{ config('app.name') }}</strong>
             </div>
         </div>
 

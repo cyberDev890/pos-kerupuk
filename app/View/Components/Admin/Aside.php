@@ -72,15 +72,6 @@ class Aside extends Component
                 ],
             ],
             [
-                'label' => 'Mutasi Stok',
-                'icon' => 'fas fa-exchange-alt',
-                'route_name' => 'stock.mutation.index',
-                'route_active' => 'stock.mutation.*',
-                'is_dropdown' => false,
-                'allowed_roles' => ['admin'],
-                'permission' => 'stock-mutation',
-            ],
-            [
                 'label' => 'Transaksi Pembelian',
                 'icon' => 'fas fa-shopping-cart',
                 'route_active' => 'transaction.purchase.*',

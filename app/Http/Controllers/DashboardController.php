@@ -26,11 +26,8 @@ class DashboardController extends Controller
 
         // 3. Low Stock Items (Threshold based on Product Setting)
         $lowStockProducts = \App\Models\Product::with('unit')
-                                ->where(function($query) {
-                                    $query->whereColumn('stok_gudang', '<=', 'stok_min')
-                                          ->orWhereColumn('stok', '<=', 'stok_min');
-                                })
-                                ->orderBy('stok_gudang', 'asc')
+                                ->whereColumn('stok', '<=', 'stok_min')
+                                ->orderBy('stok', 'asc')
                                 ->take(10)
                                 ->get();
 
@@ -59,7 +56,7 @@ class DashboardController extends Controller
 
         // 6. Total Stock Nominal Value (Total Value of all products based on HPP)
         $totalStockValue = \App\Models\Product::where('is_active', 1)
-                            ->sum(\Illuminate\Support\Facades\DB::raw('(stok + stok_gudang) * harga_beli'));
+                            ->sum(\Illuminate\Support\Facades\DB::raw('stok * harga_beli'));
 
         return view('dashboard.index', compact(
             'todayTransactions', 

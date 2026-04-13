@@ -38,7 +38,7 @@
 
     <div class="text-center bold">
         PEMBAYARAN PIUTANG<br>
-        JAYA ABADI
+        {{ config('app.name') }}
     </div>
     <div class="line"></div>
 

@@ -44,12 +44,6 @@
                             </select>
                         </div>
                         <div class="form-group my-1">
-                            <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli</label>
-                            <input type="text" class="form-control currency-input" name="harga_beli" id="harga_beli_{{ $id ?? 'new' }}"
-                                value="{{ number_format(old('harga_beli', $harga_beli ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli " onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
-                            <div class="invalid-feedback" id="error-harga-beli-{{ $id ?? 'new' }}"></div>
-                        </div>
-                        <div class="form-group my-1">
                             <label for="harga_jual_{{ $id ?? 'new' }}" id="label-jual-{{ $id ?? 'new' }}">Harga Jual (Satuan Kecil)</label>
                             <input type="text" class="form-control currency-input" name="harga_jual" id="harga_jual_{{ $id ?? 'new' }}"
                                 value="{{ number_format(old('harga_jual', $harga_jual ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Jual" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
@@ -62,16 +56,17 @@
                             <div class="invalid-feedback" id="error-harga-jual-besar-{{ $id ?? 'new' }}"></div>
                         </div>
                         <div class="form-group my-1">
+                            <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli</label>
+                            <input type="text" class="form-control currency-input" name="harga_beli" id="harga_beli_{{ $id ?? 'new' }}"
+                                value="{{ number_format(old('harga_beli', $harga_beli ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli " onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
+                            <div class="invalid-feedback" id="error-harga-beli-{{ $id ?? 'new' }}"></div>
+                        </div>
+                        <div class="form-group my-1">
                             <label for="stok_{{ $id ?? 'new' }}">Stok Toko</label>
                             <input type="number" step="any" class="form-control" name="stok" id="stok_{{ $id ?? 'new' }}"
                                 value="{{ old('stok', $stok ?? 0) }}" placeholder="Masukkan Stok Real" oninput="updateStokHelper('{{ $id ?? 'new' }}')" inputmode="numeric">
                             <small class="text-muted mb-1 d-block">Mengubah nilai ini akan menimpa stok yang ada.</small>
                             <small class="text-info font-weight-bold" id="stok-helper-{{ $id ?? 'new' }}"></small>
-                        </div>
-                        <div class="form-group my-1">
-                            <label for="stok_gudang_{{ $id ?? 'new' }}">Stok Gudang (Satuan Besar / Ball)</label>
-                            <input type="number" step="any" class="form-control" name="stok_gudang" id="stok_gudang_{{ $id ?? 'new' }}"
-                                value="{{ old('stok_gudang', $stok_gudang ?? 0) }}" placeholder="Masukkan Stok Gudang" inputmode="numeric">
                         </div>
                         <div class="form-group my-1">
                             <label for="stok_min_{{ $id ?? 'new' }}">Stok Minimal (Satuan Kecil)</label>

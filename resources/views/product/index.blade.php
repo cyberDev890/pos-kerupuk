@@ -22,7 +22,6 @@
                             <th>Harga Jual</th>
                             <th>Harga Beli</th>
                             <th>Stok Toko</th>
-                            <th>Stok Gudang</th>
                             <th>Aktif</th>
                             <th>Opsi</th>
                         </tr>
@@ -52,12 +51,6 @@
                                     {{ floor($product->stok / ($product->unit->isi ?? 1)) }} {{ $product->unit->satuan_besar ?? '' }}
                                     <small class="d-block text-muted">
                                         ({{ number_format($product->stok) }} {{ $product->unit->satuan_kecil ?? '' }})
-                                    </small>
-                                </td>
-                                <td>
-                                    {{ floor($product->stok_gudang / ($product->unit->isi ?? 1)) }} {{ $product->unit->satuan_besar ?? '' }}
-                                    <small class="d-block text-muted">
-                                        ({{ number_format($product->stok_gudang) }} {{ $product->unit->satuan_kecil ?? '' }})
                                     </small>
                                 </td>
                                 <td>

@@ -39,8 +39,8 @@
 <body onload="window.print();">
 
     <div class="text-center bold">
-        JAYA ABADI<br>
-        Rambipuji - Jember
+        {{ config('app.name') }}<br>
+        {{ env('APP_ADDRESS') }}
     </div>
     <div class="line"></div>
 
