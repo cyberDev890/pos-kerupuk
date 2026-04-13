@@ -31,6 +31,7 @@ class ReceivableController extends Controller
         
         $transactions = Transaction::with('payments')
             ->where('customer_id', $id)
+            ->where('status', '!=', 'batal')
             ->orderBy('tanggal', 'desc')
             ->orderBy('id', 'desc')
             ->get();

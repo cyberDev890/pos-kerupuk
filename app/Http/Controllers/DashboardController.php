@@ -14,13 +14,13 @@ class DashboardController extends Controller
         $endOfMonth = now()->endOfMonth()->format('Y-m-d');
 
         // 1. Today's Stats - Optimized for index usage
-        $todayTransactions = \App\Models\Transaction::where('tanggal', $today)->count();
+        $todayTransactions = \App\Models\Transaction::where('status', '!=', 'batal')->where('tanggal', $today)->count();
         // Calculate Net Revenue (Excluding Shipping/Fees)
-        $todayRevenue = \App\Models\Transaction::where('tanggal', $today)
+        $todayRevenue = \App\Models\Transaction::where('status', '!=', 'batal')->where('tanggal', $today)
                         ->sum(\Illuminate\Support\Facades\DB::raw('total_harga - biaya_kirim - biaya_tambahan'));
 
         // 2. This Month's Profit ( Simplified Logic )
-        $monthRevenue = \App\Models\Transaction::where('tanggal', '>=', $startOfMonth)
+        $monthRevenue = \App\Models\Transaction::where('status', '!=', 'batal')->where('tanggal', '>=', $startOfMonth)
                                 ->where('tanggal', '<=', $endOfMonth)
                                 ->sum(\Illuminate\Support\Facades\DB::raw('total_harga - biaya_kirim - biaya_tambahan'));
 
@@ -33,7 +33,7 @@ class DashboardController extends Controller
 
         // 4. Sales Chart (Last 7 Days) - Optimized to 1 Query
         $startDate = now()->subDays(6)->startOfDay();
-        $salesData = \App\Models\Transaction::where('tanggal', '>=', $startDate)
+        $salesData = \App\Models\Transaction::where('status', '!=', 'batal')->where('tanggal', '>=', $startDate)
                         ->selectRaw('DATE(tanggal) as date, SUM(total_harga) as total')
                         ->groupBy('date')
                         ->pluck('total', 'date')
@@ -49,7 +49,7 @@ class DashboardController extends Controller
         }
 
         // 5. Recent Transactions
-        $recentTransactions = \App\Models\Transaction::with('customer')
+        $recentTransactions = \App\Models\Transaction::where('status', '!=', 'batal')->with('customer')
                                 ->orderBy('created_at', 'desc')
                                 ->take(5)
                                 ->get();

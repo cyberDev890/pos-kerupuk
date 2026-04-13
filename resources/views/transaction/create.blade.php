@@ -660,10 +660,13 @@
             let bayarRaw = $('#inputBayar').val().replace(/\./g, '');
             let bayar = parseFloat(bayarRaw) || 0;
             let customerId = $('#customerSelect').val();
+
+            // Hide global loader if it was triggered by the global listener
+            // as we are about to handle it specifically here
+            $('#global-loader').hide();
             
             if(bayar < grandTotal) {
-                e.preventDefault();
-                $('#global-loader').hide();
+                e.preventDefault(); // Stop submission for confirmation
                 
                 if(!customerId) {
                     Swal.fire({

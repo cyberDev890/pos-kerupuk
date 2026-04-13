@@ -16,6 +16,7 @@ class ReportController extends Controller
 
         // 1. Transactions (Gross Sales)
         $transactions = Transaction::with(['details.product.unit', 'customer'])
+            ->where('status', '!=', 'batal')
             ->whereDate('tanggal', '>=', $startDate)
             ->whereDate('tanggal', '<=', $endDate)
             ->get();

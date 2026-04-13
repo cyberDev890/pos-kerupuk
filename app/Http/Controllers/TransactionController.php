@@ -230,41 +230,12 @@ class TransactionController extends Controller
             
             // Restore Stock
             foreach ($transaction->details as $detail) {
-                // Heuristic to detect if it was "Besar" unit
-                // See store() logic: if unit_type was 'besar', we reduced by (qty * isi).
-                // We didn't store unit_type, so we guess based on price.
-                
                 $product = Product::withTrashed()->find($detail->product_id);
-                $qtyToRestore = $detail->jumlah;
                 
-                if ($product && $product->unit_id) {
-                     $unit = $product->unit;
-                     if($unit && $unit->isi > 1) {
-                         // Check if the stored price is closer to Large Price
-                         $priceBesar = $product->harga_jual_besar ?? ($product->harga_jual * $unit->isi);
-                         
-                         if ($transaction->customer_id) {
-                             $customerPrice = \App\Models\CustomerPrice::where('customer_id', $transaction->customer_id)
-                                 ->where('product_id', $product->id)
-                                 ->first();
-                                 
-                             if ($customerPrice && $customerPrice->khusus_besar > 0) {
-                                 $priceBesar = $customerPrice->khusus_besar;
-                             }
-                         }
-                         
-                         // Check by string matching unit_info if available (More Robust!)
-                         $isBesarByInfo = false;
-                         if (!empty($detail->unit_info) && stripos($detail->unit_info, 'Bal') !== false) {
-                             $isBesarByInfo = true;
-                         }
-
-                         // Tolerance for float comparison (500 perak) OR explicit info string match
-                         if ($isBesarByInfo || abs($detail->harga_satuan - $priceBesar) < 500) { 
-                             // It matches Big Price logic
-                             $qtyToRestore = $detail->jumlah * $unit->isi;
-                         }
-                     }
+                // Determine qty to restore in Pcs based on stored unit_type and conversion
+                $qtyToRestore = $detail->jumlah;
+                if ($detail->unit_type === 'besar') {
+                    $qtyToRestore = $detail->jumlah * ($detail->conversion ?? 1);
                 }
                 
                 if($product) {
@@ -272,13 +243,20 @@ class TransactionController extends Controller
                 }
             }
             
-            // Delete Detail & Header
-            // Delete Header (Soft Delete)
-            $transaction->delete();
+            // Delete associated payments
+            \App\Models\TransactionPayment::where('transaction_id', $id)->delete();
+
+            // Update Header to Void status (Instead of deleting)
+            $transaction->update([
+                'status' => 'batal',
+                'bayar' => 0,
+                'kembalian' => 0,
+                'remaining_debt' => 0
+            ]);
             
             DB::commit();
             
-            return redirect()->route('transaction.sales.index')->with('success', 'Transaksi berhasil dihapus.');
+            return redirect()->route('transaction.sales.index')->with('success', 'Transaksi berhasil dibatalkan.');
             
         } catch (\Exception $e) {
             DB::rollback();

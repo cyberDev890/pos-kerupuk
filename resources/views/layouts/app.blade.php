@@ -225,11 +225,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
         $(function() {
             // Show loader on form submission
-            $('form').on('submit', function() {
+            $('form').on('submit', function(e) {
+                // If the submission is already prevented by other listeners, don't show loader
+                if (e.isDefaultPrevented()) return;
+
                 // Check if the form is valid (for simple validations)
                 if (this.checkValidity()) {
-                    $('#global-loader').css('display', 'flex');
+                    // Use a tiny timeout to allow confirm() dialogs to finish first
+                    setTimeout(() => {
+                        // Check again if it was prevented by the confirm() inside onsubmit
+                        if (!e.isDefaultPrevented()) {
+                            $('#global-loader').css('display', 'flex');
+                        }
+                    }, 50);
                 }
+            });
+
+            // If user stays on the same page (e.g. after a cancelled confirm or a failed submit), 
+            // ensure loader is hidden after a timeout
+            window.addEventListener('blur', () => {
+                 // Do nothing
+            });
+            window.addEventListener('focus', () => {
+                 $('#global-loader').hide();
             });
 
             // Show loader on menu clicks/navigation

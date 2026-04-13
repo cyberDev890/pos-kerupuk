@@ -21,6 +21,7 @@
                             <th>Biaya Kirim</th>
                             <th>Biaya Lain</th>
                             <th>Grand Total</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -36,6 +37,15 @@
                                 <td>Rp {{ number_format($trx->biaya_tambahan) }}</td>
                                 <td class="font-weight-bold">Rp {{ number_format($trx->total_harga) }}</td>
                                 <td>
+                                    @if($trx->status == 'batal')
+                                        <span class="badge badge-danger">Batal</span>
+                                    @elseif($trx->status == 'pending')
+                                        <span class="badge badge-warning">Pending</span>
+                                    @else
+                                        <span class="badge badge-success">Selesai</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <div class="d-flex">
                                         <button class="btn btn-info btn-sm mr-1" onclick="showDetail({{ $trx->id }})" title="Detail">
                                             <i class="fas fa-eye"></i>
@@ -48,14 +58,16 @@
                                             <i class="fas fa-file-alt"></i>
                                         </a>
                                         @endif
-                                        <!-- Delete Form -->
-                                        <form action="{{ route('transaction.sales.destroy', $trx->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan transaksi ini? Stok akan dikembalikan.');" class="d-inline">
+                                        <!-- Void Form (Batalkan) -->
+                                        @if($trx->status != 'batal')
+                                        <form action="{{ route('transaction.sales.destroy', $trx->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin MEMBATALKAN transaksi ini? Stok akan dikembalikan dan saldo piutang (jika ada) akan dihapus.');" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Batalkan/Hapus">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Batalkan Transaksi">
+                                                <i class="fas fa-ban"></i>
                                             </button>
                                         </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
