@@ -193,8 +193,8 @@
         let grandTotal = 0;
 
         // Auto focus payload input on add
-        function focusPrice() {
-            setTimeout(() => { $('#priceInput').focus().select(); }, 100);
+        function focusQty() {
+            setTimeout(() => { $('#qtyInput').focus().select(); }, 100);
         }
 
         $('#productSelect').change(function() {
@@ -208,12 +208,27 @@
                 let price = selected.data('harga'); 
                 let total = price * selected.data('unit-isi');
                 $('#priceInput').val(new Intl.NumberFormat('id-ID').format(total)); 
-                focusPrice();
+                focusQty();
             } else {
                 $('#unitText').val('-');
                 $('#unitId').val('');
                 $('#labelHarga').text('Harga Beli');
                 $('#priceInput').val(0);
+            }
+        });
+
+        // Keyboard handling for smoother workflow
+        $('#qtyInput').keypress(function(e) {
+            if(e.which == 13) { // Enter
+                e.preventDefault();
+                $('#priceInput').focus().select();
+            }
+        });
+
+        $('#priceInput').keypress(function(e) {
+            if(e.which == 13) { // Enter
+                e.preventDefault();
+                $('#btnAddCart').click();
             }
         });
 
@@ -232,8 +247,8 @@
             let priceRaw = $('#priceInput').val().replace(/\./g, '');
             let price = parseFloat(priceRaw);
 
-            if (!productId || qty <= 0) {
-                Swal.fire('Opps!', 'Pilih produk dan masukkan jumlah yang valid.', 'warning');
+            if (!productId || isNaN(qty) || qty <= 0 || isNaN(price)) {
+                Swal.fire('Opps!', 'Pilih produk dan masukkan jumlah serta harga yang valid.', 'warning');
                 return;
             }
 

@@ -468,6 +468,10 @@
             if(!currentProduct) return;
 
             let qty = parseInt($('#qtyInput').val());
+            if (isNaN(qty) || qty <= 0) {
+                Swal.fire('Opps!', 'Masukkan jumlah yang valid.', 'warning');
+                return;
+            }
             let price = selectedUnitType === 'kecil' ? currentProduct.activeHargaKecil : currentProduct.activeHargaBesar;
             let itemSubtotal = qty * price;
             let unitName = selectedUnitType === 'kecil' ? currentProduct.unitKecil : currentProduct.unitBesar;
