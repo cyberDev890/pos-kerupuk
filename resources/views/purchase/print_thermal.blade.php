@@ -37,7 +37,7 @@
 
     <div class="text-center bold">
         STRUK PEMBELIAN<br>
-        JAYA ABADI
+        Demo APP
     </div>
     <div class="line"></div>
 

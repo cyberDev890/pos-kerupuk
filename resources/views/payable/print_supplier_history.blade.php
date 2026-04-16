@@ -34,7 +34,7 @@
 
         <div class="header">
             <h2>RIWAYAT HUTANG SUPLIER</h2>
-            <p>JAYA ABADI - Jl. Ijen Dukusia Rambipuji</p>
+            <p>Demo APP - Jl. Dummy No. 123, Kota Dummy</p>
         </div>
 
         <table class="meta-table">

@@ -274,9 +274,9 @@
     <div class="invoice-box">
         <div class="header">
             <div class="company-details">
-                <h1>JAYA ABADI</h1>
-                <p>Jl. Ijen Dukusia Rambipuji</p>
-                <p>082330634269</p>
+                <h1>Demo APP</h1>
+                <p>Jl. Dummy No. 123, Kota Dummy</p>
+                <p>0812-3456-7890</p>
                 <p style="margin-top: 15px; font-weight: bold;">Sopir : {{ $transaction->sopir ?: '-' }}</p>
             </div>
             <div class="invoice-meta">
@@ -391,7 +391,7 @@
             <div class="signature-box">
                 <p>Hormat Kami</p>
                 <div class="signature-line"></div>
-                <strong>JAYA ABADI</strong>
+                <strong>Demo APP</strong>
             </div>
         </div>
 

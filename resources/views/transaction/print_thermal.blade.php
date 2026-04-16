@@ -39,8 +39,8 @@
 <body onload="window.print();">
 
     <div class="text-center bold">
-        JAYA ABADI<br>
-        Rambipuji - Jember
+        Demo APP<br>
+        Kota Dummy
     </div>
     <div class="line"></div>
 
