@@ -55,8 +55,8 @@
 <body onload="window.print(); setTimeout(function(){ window.close(); }, 500);">
     <div class="container">
         <div class="text-center">
-            <h4 style="margin: 0;">{{ env('APP_NAME', 'POS KERUPUK') }}</h4>
-            <p style="margin: 0; font-size: 9px;">Jln. Raya Kerupuk No. 1</p>
+            <h4 style="margin: 0;">{{ env('APP_NAME', 'Putra Tunggal Kerupuk') }}</h4>
+            <p style="margin: 0; font-size: 9px;">{{ env('APP_ADDRESS', 'Krajan - Puger Wetan - Kec. Puger - Kabupaten Jember') }}</p>
         </div>
         
         <div class="dashed"></div>
