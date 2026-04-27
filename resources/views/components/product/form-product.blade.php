@@ -44,18 +44,6 @@
                             </select>
                         </div>
                         <div class="form-group my-1">
-                            <label for="harga_jual_{{ $id ?? 'new' }}" id="label-jual-{{ $id ?? 'new' }}">Harga Jual (Satuan Kecil)</label>
-                            <input type="text" class="form-control currency-input" name="harga_jual" id="harga_jual_{{ $id ?? 'new' }}"
-                                value="{{ number_format(old('harga_jual', $harga_jual ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Jual" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
-                            <div class="invalid-feedback" id="error-harga-jual-{{ $id ?? 'new' }}"></div>
-                        </div>
-                        <div class="form-group my-1">
-                            <label for="harga_jual_besar_{{ $id ?? 'new' }}" id="label-besar-{{ $id ?? 'new' }}">Harga Jual Besar (Satuan Besar)</label>
-                            <input type="text" class="form-control currency-input" name="harga_jual_besar" id="harga_jual_besar_{{ $id ?? 'new' }}"
-                                value="{{ number_format(old('harga_jual_besar', $harga_jual_besar ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Jual Besar" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
-                            <div class="invalid-feedback" id="error-harga-jual-besar-{{ $id ?? 'new' }}"></div>
-                        </div>
-                        <div class="form-group my-1">
                             <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli (Satuan Kecil)</label>
                             <input type="text" class="form-control currency-input" name="harga_beli" id="harga_beli_{{ $id ?? 'new' }}"
                                 value="{{ number_format(old('harga_beli', $harga_beli ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli " onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
@@ -66,6 +54,18 @@
                             <input type="text" class="form-control currency-input" name="harga_beli_besar" id="harga_beli_besar_{{ $id ?? 'new' }}"
                                 value="{{ number_format(old('harga_beli_besar', $harga_beli_besar ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli Besar" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
                             <div class="invalid-feedback" id="error-harga-beli-besar-{{ $id ?? 'new' }}"></div>
+                        </div>
+                        <div class="form-group my-1">
+                            <label for="harga_jual_{{ $id ?? 'new' }}" id="label-jual-{{ $id ?? 'new' }}">Harga Jual (Satuan Kecil)</label>
+                            <input type="text" class="form-control currency-input" name="harga_jual" id="harga_jual_{{ $id ?? 'new' }}"
+                                value="{{ number_format(old('harga_jual', $harga_jual ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Jual" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
+                            <div class="invalid-feedback" id="error-harga-jual-{{ $id ?? 'new' }}"></div>
+                        </div>
+                        <div class="form-group my-1">
+                            <label for="harga_jual_besar_{{ $id ?? 'new' }}" id="label-besar-{{ $id ?? 'new' }}">Harga Jual Besar (Satuan Besar)</label>
+                            <input type="text" class="form-control currency-input" name="harga_jual_besar" id="harga_jual_besar_{{ $id ?? 'new' }}"
+                                value="{{ number_format(old('harga_jual_besar', $harga_jual_besar ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Jual Besar" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
+                            <div class="invalid-feedback" id="error-harga-jual-besar-{{ $id ?? 'new' }}"></div>
                         </div>
                         <div class="form-group my-1">
                             <label for="stok_{{ $id ?? 'new' }}">Stok Toko</label>

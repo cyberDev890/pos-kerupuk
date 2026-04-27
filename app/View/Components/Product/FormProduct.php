@@ -14,7 +14,7 @@ class FormProduct extends Component
      * Create a new component instance.
      */
 
-    public $id, $nama_produk, $harga_jual, $harga_jual_besar, $harga_beli, $stok, $stok_gudang, $stok_min, $is_active, $kategori_id, $kategori, $unit_id, $units;
+    public $id, $nama_produk, $harga_jual, $harga_jual_besar, $harga_beli, $harga_beli_besar, $stok, $stok_gudang, $stok_min, $is_active, $kategori_id, $kategori, $unit_id, $units;
     public function __construct($id=null)
     {
         //
@@ -28,6 +28,7 @@ class FormProduct extends Component
             $this->harga_jual = $product->harga_jual;
             $this->harga_jual_besar = $product->harga_jual_besar;
             $this->harga_beli = $product->harga_beli;
+            $this->harga_beli_besar = $product->harga_beli_besar;
 
             $isi = $product->unit ? $product->unit->isi : 1;
             $this->stok = $product->stok;
