@@ -22,6 +22,16 @@
                     event.preventDefault();
                     Swal.fire({!! Session::pull('alert.delete') !!}).then(function(result) {
                         if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Mohon Tunggu',
+                                html: 'Sedang menghapus data...',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                            
                             var form = document.createElement('form');
                             form.action = confirmDeleteElement.href;
                             form.method = 'POST';
