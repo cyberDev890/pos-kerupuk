@@ -78,10 +78,14 @@ class ProductController extends Controller
                 return back()->withErrors(['harga_jual_besar' => "Harga Jual Besar harus lebih besar atau sama dengan modal per bal (Rp " . number_format($modalBesar) . ")!"])->withInput();
             }
         }
-        
-        // Custom Validation: Harga Beli Besar < Harga Jual Besar
-        if ($request->harga_beli_besar > 0 && $request->harga_jual_besar > 0) {
-            if ($request->harga_beli_besar > $request->harga_jual_besar) {
+        // Custom Validation: Harga Beli Besar < Harga Jual Besar and Harga Beli Besar < Modal Total
+        if ($request->harga_beli_besar > 0) {
+            $modalKecilTotal = $request->harga_beli * $isi;
+            if ($request->harga_beli_besar < $modalKecilTotal) {
+                return back()->withErrors(['harga_beli_besar' => "Harga Beli Besar tidak boleh kurang dari modal per pcs (Rp " . number_format($modalKecilTotal) . ")!"])->withInput();
+            }
+
+            if ($request->harga_jual_besar > 0 && $request->harga_beli_besar > $request->harga_jual_besar) {
                 return back()->withErrors(['harga_beli_besar' => 'Harga Beli Besar harus lebih kecil dari Harga Jual Besar!'])->withInput();
             }
         }

@@ -139,8 +139,15 @@
             isValid = false;
         }
 
-        if (hargaBeliBesar > 0 && hargaJualBesar > 0) {
-            if (hargaBeliBesar > hargaJualBesar) {
+        if (hargaBeliBesar > 0) {
+            let modalKecilTotal = hargaBeli * isi;
+            if (hargaBeliBesar < modalKecilTotal) {
+                elHargaBeliBesar.classList.add('is-invalid');
+                document.getElementById('error-harga-beli-besar-' + id).textContent = 'Harga Beli Besar tidak boleh kurang dari modal per pcs (Rp ' + new Intl.NumberFormat('id-ID').format(modalKecilTotal) + ')!';
+                isValid = false;
+            }
+
+            if (hargaJualBesar > 0 && hargaBeliBesar > hargaJualBesar) {
                 elHargaBeliBesar.classList.add('is-invalid');
                 document.getElementById('error-harga-beli-besar-' + id).textContent = 'Harga Beli Besar harus lebih kecil atau sama dengan Harga Jual Besar!';
                 isValid = false;
