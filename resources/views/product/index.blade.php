@@ -41,7 +41,9 @@
                                 </td>
                                 <td>
                                     <div>Rp.{{ number_format($product->harga_beli) }} / {{ $product->unit->satuan_kecil ?? 'Pcs' }}</div>
-                                    @if($product->unit && $product->unit->isi > 1)
+                                    @if($product->harga_beli_besar)
+                                        <div>Rp.{{ number_format($product->harga_beli_besar) }} / {{ $product->unit->satuan_besar ?? 'Unit' }}</div>
+                                    @elseif($product->unit && $product->unit->isi > 1)
                                         <small class="text-muted">
                                             Rp.{{ number_format($product->harga_beli * $product->unit->isi) }} / {{ $product->unit->satuan_besar ?? 'Unit' }}
                                         </small>
@@ -88,6 +90,7 @@
         $('#label-jual-' + id).text('Harga Jual (' + kecil + ')');
         $('#label-besar-' + id).text('Harga Jual Besar (' + besar + ')');
         $('#label-beli-' + id).text('Harga Beli (' + kecil + ')');
+        $('#label-beli-besar-' + id).text('Harga Beli Besar (' + besar + ')');
     }
 
     $(document).ready(function() {

@@ -56,10 +56,16 @@
                             <div class="invalid-feedback" id="error-harga-jual-besar-{{ $id ?? 'new' }}"></div>
                         </div>
                         <div class="form-group my-1">
-                            <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli</label>
+                            <label for="harga_beli_{{ $id ?? 'new' }}" id="label-beli-{{ $id ?? 'new' }}">Harga Beli (Satuan Kecil)</label>
                             <input type="text" class="form-control currency-input" name="harga_beli" id="harga_beli_{{ $id ?? 'new' }}"
                                 value="{{ number_format(old('harga_beli', $harga_beli ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli " onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
                             <div class="invalid-feedback" id="error-harga-beli-{{ $id ?? 'new' }}"></div>
+                        </div>
+                        <div class="form-group my-1">
+                            <label for="harga_beli_besar_{{ $id ?? 'new' }}" id="label-beli-besar-{{ $id ?? 'new' }}">Harga Beli Besar (Satuan Besar)</label>
+                            <input type="text" class="form-control currency-input" name="harga_beli_besar" id="harga_beli_besar_{{ $id ?? 'new' }}"
+                                value="{{ number_format(old('harga_beli_besar', $harga_beli_besar ?? 0), 0, ',', '.') }}" placeholder="Masukkan Harga Beli Besar" onblur="validateProductForm('{{ $id ?? 'new' }}')" inputmode="numeric">
+                            <div class="invalid-feedback" id="error-harga-beli-besar-{{ $id ?? 'new' }}"></div>
                         </div>
                         <div class="form-group my-1">
                             <label for="stok_{{ $id ?? 'new' }}">Stok Toko</label>
@@ -111,15 +117,18 @@
         }
 
         let elHargaBeli = document.getElementById('harga_beli_' + id);
+        let elHargaBeliBesar = document.getElementById('harga_beli_besar_' + id);
         let elHargaJual = document.getElementById('harga_jual_' + id);
         let elHargaJualBesar = document.getElementById('harga_jual_besar_' + id);
 
         let hargaBeli = parseFloat(elHargaBeli.value.replace(/\./g, '').replace(/,/g, '.')) || 0;
+        let hargaBeliBesar = parseFloat(elHargaBeliBesar.value.replace(/\./g, '').replace(/,/g, '.')) || 0;
         let hargaJual = parseFloat(elHargaJual.value.replace(/\./g, '').replace(/,/g, '.')) || 0;
         let hargaJualBesar = parseFloat(elHargaJualBesar.value.replace(/\./g, '').replace(/,/g, '.')) || 0;
 
         // Reset Validation
         elHargaBeli.classList.remove('is-invalid');
+        elHargaBeliBesar.classList.remove('is-invalid');
         elHargaJualBesar.classList.remove('is-invalid');
 
         let isValid = true;
@@ -130,8 +139,16 @@
             isValid = false;
         }
 
+        if (hargaBeliBesar > 0 && hargaJualBesar > 0) {
+            if (hargaBeliBesar > hargaJualBesar) {
+                elHargaBeliBesar.classList.add('is-invalid');
+                document.getElementById('error-harga-beli-besar-' + id).textContent = 'Harga Beli Besar harus lebih kecil atau sama dengan Harga Jual Besar!';
+                isValid = false;
+            }
+        }
+
         if (hargaJualBesar > 0) {
-            let modalBesar = hargaBeli * isi;
+            let modalBesar = hargaBeliBesar > 0 ? hargaBeliBesar : (hargaBeli * isi);
             if (modalBesar > hargaJualBesar) {
                 elHargaJualBesar.classList.add('is-invalid');
                 document.getElementById('error-harga-jual-besar-' + id).textContent = 'Harga Jual Besar tidak boleh kurang dari modal per bal (Rp ' + new Intl.NumberFormat('id-ID').format(modalBesar) + ')!';

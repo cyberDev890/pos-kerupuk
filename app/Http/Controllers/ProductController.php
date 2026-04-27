@@ -27,6 +27,7 @@ class ProductController extends Controller
             'harga_jual' => $request->harga_jual ? str_replace('.', '', $request->harga_jual) : 0,
             'harga_jual_besar' => $request->harga_jual_besar ? str_replace('.', '', $request->harga_jual_besar) : 0,
             'harga_beli' => $request->harga_beli ? str_replace('.', '', $request->harga_beli) : 0,
+            'harga_beli_besar' => $request->harga_beli_besar ? str_replace('.', '', $request->harga_beli_besar) : null,
         ]);
 
         $rules = [
@@ -37,6 +38,7 @@ class ProductController extends Controller
             'harga_jual' => 'required|numeric|min:0',
             'harga_jual_besar' => 'nullable|numeric|min:0',
             'harga_beli' => 'required|numeric|min:0',
+            'harga_beli_besar' => 'nullable|numeric|min:0',
             'stok_min' => 'required|numeric|min:0',
             'unit_id' => 'required|exists:units,id',
         ];
@@ -71,9 +73,16 @@ class ProductController extends Controller
 
         // Validate Big Unit Price if exists
         if ($request->harga_jual_besar > 0) {
-            $modalBesar = $request->harga_beli * $isi;
+            $modalBesar = $request->harga_beli_besar ?: ($request->harga_beli * $isi);
             if ($modalBesar > $request->harga_jual_besar) {
                 return back()->withErrors(['harga_jual_besar' => "Harga Jual Besar harus lebih besar atau sama dengan modal per bal (Rp " . number_format($modalBesar) . ")!"])->withInput();
+            }
+        }
+        
+        // Custom Validation: Harga Beli Besar < Harga Jual Besar
+        if ($request->harga_beli_besar > 0 && $request->harga_jual_besar > 0) {
+            if ($request->harga_beli_besar > $request->harga_jual_besar) {
+                return back()->withErrors(['harga_beli_besar' => 'Harga Beli Besar harus lebih kecil dari Harga Jual Besar!'])->withInput();
             }
         }
 
@@ -85,6 +94,7 @@ class ProductController extends Controller
                 'harga_jual' => $request->harga_jual,
                 'harga_jual_besar' => $request->harga_jual_besar,
                 'harga_beli' => $request->harga_beli,
+                'harga_beli_besar' => $request->harga_beli_besar,
                 'stok' => $request->stok ?? 0, // Allow updating stock directly
                 'stok_gudang' => ($request->stok_gudang ?? 0) * $isi,
                 'stok_min' => $request->stok_min,
