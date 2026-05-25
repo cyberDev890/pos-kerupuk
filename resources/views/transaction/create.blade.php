@@ -10,7 +10,11 @@
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
         {{ session('success') }}
-        <script>localStorage.removeItem('pos_cart');</script>
+        <script>
+            localStorage.removeItem('pos_cart');
+            localStorage.removeItem('pos_customer');
+            localStorage.removeItem('pos_date');
+        </script>
         @if(session('last_transaction_id'))
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -284,6 +288,20 @@
             theme: 'bootstrap4'
         });
 
+        let savedCustomer = localStorage.getItem('pos_customer');
+        let savedDate = localStorage.getItem('pos_date');
+
+        if (savedCustomer !== null) {
+            $('#customerSelect').val(savedCustomer).trigger('change');
+        }
+        if (savedDate !== null) {
+            $('input[name="tanggal"]').val(savedDate);
+        }
+
+        $('input[name="tanggal"]').on('change', function() {
+            localStorage.setItem('pos_date', $(this).val());
+        });
+
         let cart = JSON.parse(localStorage.getItem('pos_cart')) || [];
         let subTotal = 0;
         let grandTotal = 0;
@@ -298,6 +316,8 @@
         // Customer Selection Logic
         $('#customerSelect').change(function() {
             let val = $(this).val();
+            localStorage.setItem('pos_customer', val);
+            
             if(val) {
                 // Customer selected
                 $('#inputBiayaKirim').prop('disabled', false);
@@ -319,6 +339,8 @@
                     if(currentProduct) {
                          $('#productSelect').trigger('select2:select');
                     }
+                    
+                    updateCartPrices();
                 });
                 
             } else {
@@ -332,6 +354,8 @@
                 if(currentProduct) {
                      $('#productSelect').trigger('select2:select');
                 }
+                
+                updateCartPrices();
             }
             calculateTotals();
         });
@@ -497,17 +521,24 @@
                 return;
             }
 
-            cart.push({
-                product_id: currentProduct.id,
-                nama: currentProduct.nama,
-                real_unit_id: currentProduct.unitId,
-                unit_name: unitName,
-                unit_type: selectedUnitType,
-                jumlah: qty,
-                harga_satuan: price,
-                subtotal: itemSubtotal,
-                isi: currentProduct.isi
-            });
+            let existingItemIndex = cart.findIndex(item => item.product_id === currentProduct.id && item.unit_type === selectedUnitType);
+
+            if (existingItemIndex !== -1) {
+                cart[existingItemIndex].jumlah += qty;
+                cart[existingItemIndex].subtotal = cart[existingItemIndex].jumlah * price;
+            } else {
+                cart.push({
+                    product_id: currentProduct.id,
+                    nama: currentProduct.nama,
+                    real_unit_id: currentProduct.unitId,
+                    unit_name: unitName,
+                    unit_type: selectedUnitType,
+                    jumlah: qty,
+                    harga_satuan: price,
+                    subtotal: itemSubtotal,
+                    isi: currentProduct.isi
+                });
+            }
             
             renderCart();
             
@@ -517,6 +548,36 @@
             $('#productDetail').slideUp(); 
             currentProduct = null;
         });
+
+        function updateCartPrices() {
+            if (cart.length === 0) return;
+
+            cart.forEach(item => {
+                let option = $('#productSelect option[value="' + item.product_id + '"]');
+                if (option.length > 0) {
+                    let baseHargaKecil = parseFloat(option.data('harga-kecil'));
+                    let baseHargaBesar = parseFloat(option.data('harga-besar'));
+                    let newPrice = 0;
+
+                    if (item.unit_type === 'kecil') {
+                        newPrice = baseHargaKecil;
+                        if (customerPrices && customerPrices[item.product_id] && customerPrices[item.product_id].khusus_kecil > 0) {
+                            newPrice = parseFloat(customerPrices[item.product_id].khusus_kecil);
+                        }
+                    } else {
+                        newPrice = baseHargaBesar;
+                        if (customerPrices && customerPrices[item.product_id] && customerPrices[item.product_id].khusus_besar > 0) {
+                            newPrice = parseFloat(customerPrices[item.product_id].khusus_besar);
+                        }
+                    }
+
+                    item.harga_satuan = newPrice;
+                    item.subtotal = item.jumlah * newPrice;
+                }
+            });
+
+            renderCart();
+        }
 
         function renderCart() {
             localStorage.setItem('pos_cart', JSON.stringify(cart));
